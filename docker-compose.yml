@@ -36,7 +36,7 @@ services:
       dockerfile: Dockerfile
     restart: unless-stopped
     ports:
-      - "3010:3000"
+      - "3000:3000"
     environment:
       DATABASE_URL: postgresql://${POSTGRES_USER:-yaf}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB:-yaf_db}?schema=public
       JWT_SECRET: ${JWT_SECRET:?JWT_SECRET must be set}

@@ -101,7 +101,7 @@ API tests use mocked Prisma — no database required. E2E login uses a mocked AP
 docker compose up --build -d
 ```
 
-3. Open [http://localhost:3010](http://localhost:3010)
+3. Open [http://localhost:3000](http://localhost:3000)
 
 Admin login: `/admin/login` using `SEED_ADMIN_USERNAME` / `SEED_ADMIN_PASSWORD` from `.env`.
 
