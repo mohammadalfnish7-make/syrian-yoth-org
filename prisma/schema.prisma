@@ -1,0 +1,199 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum AdminRole {
+  SUPER_ADMIN
+  GOVERNORATE_ADMIN
+}
+
+enum NewsStatus {
+  draft
+  published
+}
+
+enum RequestStatus {
+  new
+  reviewed
+  accepted
+  rejected
+}
+
+model Governorate {
+  id        String   @id @default(cuid())
+  nameAr    String   @map("name_ar")
+  nameEn    String?  @map("name_en")
+  isActive  Boolean  @default(true) @map("is_active")
+  sortOrder Int      @default(0) @map("sort_order")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  admins            Admin[]
+  news              News[]
+  volunteerRequests VolunteerRequest[]
+
+  @@map("governorates")
+}
+
+model Admin {
+  id             String    @id @default(cuid())
+  username       String    @unique
+  passwordHash   String    @map("password_hash")
+  role           AdminRole
+  governorateId  String?   @map("governorate_id")
+  isActive       Boolean   @default(true) @map("is_active")
+  createdAt      DateTime  @default(now()) @map("created_at")
+  lastLogin      DateTime? @map("last_login")
+
+  governorate Governorate? @relation(fields: [governorateId], references: [id])
+  news        News[]
+  auditLogs   AuditLog[]
+
+  @@map("admins")
+}
+
+model News {
+  id            String     @id @default(cuid())
+  governorateId String     @map("governorate_id")
+  authorId      String     @map("author_id")
+  title         String
+  body          String     @db.Text
+  coverImageUrl String?    @map("cover_image_url")
+  status        NewsStatus @default(draft)
+  publishedAt   DateTime?  @map("published_at")
+  createdAt     DateTime   @default(now()) @map("created_at")
+  updatedAt     DateTime   @updatedAt @map("updated_at")
+
+  governorate Governorate @relation(fields: [governorateId], references: [id])
+  author      Admin       @relation(fields: [authorId], references: [id])
+
+  @@index([governorateId, status])
+  @@map("news")
+}
+
+model Program {
+  id          String   @id @default(cuid())
+  title       String
+  description String   @db.Text
+  imageUrl    String?  @map("image_url")
+  isActive    Boolean  @default(true) @map("is_active")
+  sortOrder   Int      @default(0) @map("sort_order")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@map("programs")
+}
+
+model FocusArea {
+  id            String   @id @default(cuid())
+  titleAr       String   @map("title_ar")
+  titleEn       String?  @map("title_en")
+  descriptionAr String   @map("description_ar") @db.Text
+  descriptionEn String?  @map("description_en") @db.Text
+  imageUrl      String?  @map("image_url")
+  icon          String   @default("leadership")
+  sortOrder     Int      @default(0) @map("sort_order")
+  isActive      Boolean  @default(true) @map("is_active")
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  @@map("focus_areas")
+}
+
+model ImpactStat {
+  id        String   @id @default(cuid())
+  labelAr   String   @map("label_ar")
+  labelEn   String?  @map("label_en")
+  value     String
+  icon      String?
+  sortOrder Int      @default(0) @map("sort_order")
+  isActive  Boolean  @default(true) @map("is_active")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("impact_stats")
+}
+
+model Partner {
+  id         String   @id @default(cuid())
+  name       String
+  logoUrl    String?  @map("logo_url")
+  websiteUrl String?  @map("website_url")
+  sortOrder  Int      @default(0) @map("sort_order")
+  isActive   Boolean  @default(true) @map("is_active")
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  @@map("partners")
+}
+
+model BoardMember {
+  id        String   @id @default(cuid())
+  nameAr    String   @map("name_ar")
+  nameEn    String?  @map("name_en")
+  roleAr    String   @map("role_ar")
+  roleEn    String?  @map("role_en")
+  bioAr     String?  @map("bio_ar") @db.Text
+  bioEn     String?  @map("bio_en") @db.Text
+  imageUrl  String?  @map("image_url")
+  sortOrder Int      @default(0) @map("sort_order")
+  isActive  Boolean  @default(true) @map("is_active")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("board_members")
+}
+
+model VolunteerRequest {
+  id            String        @id @default(cuid())
+  fullName      String        @map("full_name")
+  phone         String
+  email         String?
+  governorateId String        @map("governorate_id")
+  message       String?       @db.Text
+  status        RequestStatus @default(new)
+  submittedAt   DateTime      @default(now()) @map("submitted_at")
+
+  governorate Governorate @relation(fields: [governorateId], references: [id])
+
+  @@index([governorateId, status])
+  @@map("volunteer_requests")
+}
+
+model PartnerRequest {
+  id            String        @id @default(cuid())
+  orgName       String        @map("org_name")
+  contactPerson String        @map("contact_person")
+  phone         String
+  email         String?
+  message       String?       @db.Text
+  status        RequestStatus @default(new)
+  submittedAt   DateTime      @default(now()) @map("submitted_at")
+
+  @@map("partner_requests")
+}
+
+model SiteSetting {
+  key       String   @id
+  value     Json
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("site_settings")
+}
+
+model AuditLog {
+  id         String   @id @default(cuid())
+  adminId    String   @map("admin_id")
+  action     String
+  entityType String   @map("entity_type")
+  entityId   String?  @map("entity_id")
+  details    Json?
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  admin Admin @relation(fields: [adminId], references: [id])
+
+  @@index([adminId, createdAt])
+  @@map("audit_logs")
+}

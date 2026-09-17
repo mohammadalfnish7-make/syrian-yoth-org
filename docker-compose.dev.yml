@@ -1,0 +1,9 @@
+# Dev helper: expose Postgres to the host so `npm run dev` can use the Docker DB.
+# Usage:
+#   docker compose stop app
+#   docker compose -f docker-compose.yml -f docker-compose.dev.yml up db -d
+#   npm run dev
+services:
+  db:
+    ports:
+      - "5432:5432"
