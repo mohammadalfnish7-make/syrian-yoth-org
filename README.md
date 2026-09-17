@@ -113,7 +113,7 @@ docker compose logs -f app # app logs
 docker compose down        # stop
 ```
 
-> If ports `3000` or `5432` are already in use locally, Docker maps the app to **3010** and keeps Postgres internal to the Docker network.
+> Docker publishes the app on **3010** so it does not collide with `npm run dev` on `3000`. Postgres stays internal to the Docker network. Override the host port with `APP_PORT` if needed.
 
 ## Project Structure
 
