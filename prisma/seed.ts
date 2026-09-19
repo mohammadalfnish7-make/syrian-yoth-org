@@ -160,7 +160,7 @@ async function main() {
   for (const gov of SYRIAN_GOVERNORATES) {
     await prisma.governorate.upsert({
       where: { id: `gov-${gov.sortOrder}` },
-      update: { nameAr: gov.nameAr, nameEn: gov.nameEn, sortOrder: gov.sortOrder },
+      update: {},
       create: {
         id: `gov-${gov.sortOrder}`,
         nameAr: gov.nameAr,
@@ -174,7 +174,7 @@ async function main() {
   for (const stat of DEFAULT_IMPACT_STATS) {
     await prisma.impactStat.upsert({
       where: { id: `stat-${stat.sortOrder}` },
-      update: stat,
+      update: {},
       create: { id: `stat-${stat.sortOrder}`, ...stat },
     });
   }
@@ -183,7 +183,7 @@ async function main() {
   for (const area of DEFAULT_FOCUS_AREAS) {
     await prisma.focusArea.upsert({
       where: { id: area.id },
-      update: area,
+      update: {},
       create: area,
     });
   }
@@ -191,7 +191,7 @@ async function main() {
 
   await prisma.siteSetting.upsert({
     where: { key: DEFAULT_WHAT_WE_DO.key },
-    update: { value: DEFAULT_WHAT_WE_DO.value },
+    update: {},
     create: DEFAULT_WHAT_WE_DO,
   });
   console.log("✅ What We Do section settings seeded");
@@ -199,7 +199,7 @@ async function main() {
   for (const setting of DEFAULT_SITE_SETTINGS) {
     await prisma.siteSetting.upsert({
       where: { key: setting.key },
-      update: { value: setting.value },
+      update: {},
       create: setting,
     });
   }

@@ -30,6 +30,12 @@ type SiteSettings = {
     logoMarkUrl: string | null;
     faviconUrl: string | null;
   };
+  about: {
+    mission: { ar: string; en: string };
+    vision: { ar: string; en: string };
+    values: { ar: string; en: string }[];
+    yearsOfExperience: string;
+  };
 };
 
 export default function AdminSettingsPage() {
@@ -208,6 +214,28 @@ export default function AdminSettingsPage() {
                 })
               }
             />
+          </div>
+        </section>
+
+        {/* About Info */}
+        <section className="admin-card">
+          <h2 className="admin-card__title">معلومات من نحن</h2>
+          <div className="space-y-4">
+            <div>
+              <label className="block text-sm mb-1">سنوات الخبرة / العطاء (مثال: +15)</label>
+              <input
+                type="text"
+                value={settings.about?.yearsOfExperience || ""}
+                onChange={(e) =>
+                  setSettings({
+                    ...settings,
+                    about: { ...settings.about, yearsOfExperience: e.target.value },
+                  })
+                }
+                className="w-full px-4 py-2 border border-brand-grey-2 rounded-md"
+                dir="ltr"
+              />
+            </div>
           </div>
         </section>
 

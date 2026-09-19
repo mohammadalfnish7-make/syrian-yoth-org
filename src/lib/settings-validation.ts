@@ -57,6 +57,7 @@ export const adminSettingsSchema = z
             })
           )
           .max(20),
+        yearsOfExperience: z.string().max(20).optional(),
       })
       .optional(),
     branding: z

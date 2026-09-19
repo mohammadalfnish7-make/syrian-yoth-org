@@ -21,11 +21,11 @@ export function SiteFooter({ settings }: SiteFooterProps) {
               <span className="site-brand__tag content-en">Syria</span>
             </div>
             <p className="footer__desc content-ar">
-              منظمة سورية مستقلة تمكّن الشباب وتحوّل طاقتهم إلى أثر مجتمعي حقيقي.
+              مؤسسة سورية مستقلة تمكّن الشباب وتحوّل طاقتهم إلى أثر مجتمعي حقيقي.
             </p>
             <p className="footer__desc content-en">
-              An independent Syrian organization empowering youth and turning their
-              energy into real community impact.
+              An independent Syrian foundation empowering youth and turning their
+              energy into real societal impact.
             </p>
           </div>
 

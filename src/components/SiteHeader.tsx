@@ -1,4 +1,5 @@
 import Link from "next/link";
+import type { PublicSettings } from "@/types/site";
 
 const NAV_LINKS = [
   { href: "#about", labelAr: "من نحن", labelEn: "About" },
@@ -10,17 +11,23 @@ const NAV_LINKS = [
   { href: "#contact", labelAr: "تواصل", labelEn: "Contact" },
 ] as const;
 
-export function SiteHeader() {
+export function SiteHeader({ settings }: { settings?: PublicSettings }) {
   return (
     <header className="site-header">
       <div className="container-yaf header__inner">
         <Link href="/" className="site-brand">
-          <span className="site-brand__name content-ar">مؤسسة شباب سوريا</span>
-          <span className="site-brand__name content-en">
-            Syrian Youth Foundation
-          </span>
-          <span className="site-brand__tag content-ar">سوريا</span>
-          <span className="site-brand__tag content-en">Syria</span>
+          {settings?.branding?.logoUrl ? (
+            <img src={settings.branding.logoUrl} alt="مؤسسة شباب سوريا" className="h-12 w-auto object-contain" />
+          ) : (
+            <>
+              <span className="site-brand__name content-ar">مؤسسة شباب سوريا</span>
+              <span className="site-brand__name content-en">
+                Syrian Youth Foundation
+              </span>
+              <span className="site-brand__tag content-ar">سوريا</span>
+              <span className="site-brand__tag content-en">Syria</span>
+            </>
+          )}
         </Link>
 
         <label htmlFor="nav-open" id="nav-open-label" className="nav-toggle-btn">

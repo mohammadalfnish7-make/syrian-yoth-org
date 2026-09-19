@@ -44,5 +44,10 @@ export function normalizeAboutSettings(
       )
     : defaults.values;
 
-  return { mission, vision, values };
+  const yearsOfExperience =
+    typeof data.yearsOfExperience === "string"
+      ? data.yearsOfExperience
+      : defaults.yearsOfExperience;
+
+  return { mission, vision, values, yearsOfExperience };
 }

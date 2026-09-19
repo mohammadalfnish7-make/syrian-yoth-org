@@ -46,7 +46,7 @@ export default async function SiteLayout({
       />
 
       <div className="site">
-        <SiteHeader />
+        <SiteHeader settings={settings} />
         {children}
         <SiteFooter settings={settings} />
       </div>

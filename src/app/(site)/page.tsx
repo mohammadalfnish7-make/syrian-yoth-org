@@ -184,7 +184,7 @@ export default async function HomePage() {
         <div className="container-yaf hero-section__content">
           <div className="hero-badge content-ar">
             <span className="hero-badge__dot" />
-            منظمة سورية مستقلة في المجتمع المدني
+            مؤسسة سورية مستقلة في المجتمع المدني
           </div>
           <div className="hero-badge content-en">
             <span className="hero-badge__dot" />
@@ -240,7 +240,7 @@ export default async function HomePage() {
           <div className="about-grid">
             <div className="about-highlight">
               <AnimatedStatValue
-                value="+15"
+                value={settings.about.yearsOfExperience}
                 className="about-highlight__value"
                 durationMs={1800}
               />
@@ -256,10 +256,10 @@ export default async function HomePage() {
               <span className="section-label content-ar">من نحن</span>
               <span className="section-label content-en">Who We Are</span>
               <h2 className="section-title content-ar">
-                منظمة شبابية سورية بروح قيادية
+                مؤسسة شبابية سورية بروح قيادية
               </h2>
               <h2 className="section-title content-en">
-                A Syrian Youth Organization with a Leadership Spirit
+                A Syrian Youth Foundation with a Leadership Spirit
               </h2>
               <p className="section-desc content-ar">{settings.about.vision.ar}</p>
               <p className="section-desc content-en">{settings.about.vision.en}</p>

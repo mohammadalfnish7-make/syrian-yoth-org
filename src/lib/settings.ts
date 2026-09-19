@@ -46,6 +46,7 @@ const DEFAULT_SETTINGS: PublicSettings = {
       { ar: "الانتماء", en: "Belonging" },
       { ar: "التكافل", en: "Solidarity" },
     ],
+    yearsOfExperience: "+15",
   },
   branding: {
     logoUrl: "/images/logo.png",

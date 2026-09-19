@@ -35,6 +35,7 @@ export type AboutSettings = {
   mission: BilingualText;
   vision: BilingualText;
   values: BilingualText[];
+  yearsOfExperience: string;
 };
 
 export type PublicSettings = {
