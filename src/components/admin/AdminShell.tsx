@@ -83,14 +83,14 @@ export function AdminShell({ children, session }: AdminShellProps) {
             <Link href="/admin/dashboard" className="admin-shell__brand">
               <Image
                 src="/images/logo.png"
-                alt="Youth Affairs Foundation"
+                alt="Syrian Youth Foundation"
                 width={36}
                 height={36}
                 className="admin-shell__brand-logo"
               />
               <div>
-                <span className="admin-shell__brand-name content-ar">شؤون الشباب</span>
-                <span className="admin-shell__brand-name content-en">Youth Affairs</span>
+                <span className="admin-shell__brand-name content-ar">شباب سوريا</span>
+                <span className="admin-shell__brand-name content-en">Syrian Youth</span>
                 <span className="admin-shell__brand-sub content-ar">لوحة التحكم</span>
                 <span className="admin-shell__brand-sub content-en">Admin Panel</span>
               </div>

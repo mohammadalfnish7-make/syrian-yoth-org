@@ -4,12 +4,12 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: {
-    default: "مؤسسة شؤون الشباب | Youth Affairs Foundation",
-    template: "%s | مؤسسة شؤون الشباب",
+    default: "مؤسسة شباب سوريا | Syrian Youth Foundation",
+    template: "%s | مؤسسة شباب سوريا",
   },
   description:
-    "مؤسسة شؤون الشباب السورية — نصنع من طاقة الشباب قيادةً تبني، لا فعاليات تمر.",
-  keywords: ["شباب", "سوريا", "تطوع", "مؤسسة", "شؤون الشباب"],
+    "مؤسسة شباب سوريا — نصنع من طاقة الشباب قيادةً تبني، لا فعاليات تمر.",
+  keywords: ["شباب", "سوريا", "تطوع", "مؤسسة", "شباب سوريا"],
   icons: {
     icon: "/favicon.png",
     apple: "/favicon.png",

@@ -15,9 +15,9 @@ export function SiteHeader() {
     <header className="site-header">
       <div className="container-yaf header__inner">
         <Link href="/" className="site-brand">
-          <span className="site-brand__name content-ar">مؤسسة شؤون الشباب</span>
+          <span className="site-brand__name content-ar">مؤسسة شباب سوريا</span>
           <span className="site-brand__name content-en">
-            Youth Affairs Foundation
+            Syrian Youth Foundation
           </span>
           <span className="site-brand__tag content-ar">سوريا</span>
           <span className="site-brand__tag content-en">Syria</span>

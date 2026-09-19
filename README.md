@@ -1,6 +1,6 @@
 # Syrian Youth Foundation
 
-موقع مؤسسة شؤون الشباب — Youth Affairs Foundation
+موقع مؤسسة شباب سوريا — Syrian Youth Foundation
 
 ## Tech Stack
 

@@ -47,13 +47,13 @@ export default function AdminLoginPage() {
         <div className="admin-login__brand-content">
           <Image
             src="/images/logo.png"
-            alt="مؤسسة شؤون الشباب"
+            alt="مؤسسة شباب سوريا"
             width={80}
             height={80}
             className="admin-login__logo"
             priority
           />
-          <h1 className="admin-login__brand-title">مؤسسة شؤون الشباب</h1>
+          <h1 className="admin-login__brand-title">مؤسسة شباب سوريا</h1>
           <p className="admin-login__brand-tagline">
             جيلٌ شابٌ متمكنٌ وقوي
           </p>

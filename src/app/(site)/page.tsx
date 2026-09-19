@@ -387,7 +387,7 @@ export default async function HomePage() {
               <h2 className="section-title content-ar">أعضاء الإدارة</h2>
               <h2 className="section-title content-en">Board Members</h2>
               <p className="section-desc content-ar">
-                فريق قيادة مؤسسة شؤون الشباب الذي يوجّه رؤيتنا ورسالتنا
+                فريق قيادة مؤسسة شباب سوريا الذي يوجّه رؤيتنا ورسالتنا
               </p>
               <p className="section-desc content-en">
                 The leadership team guiding our foundation&apos;s vision and mission
