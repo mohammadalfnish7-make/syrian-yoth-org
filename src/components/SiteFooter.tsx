@@ -1,3 +1,4 @@
+import { Facebook, Instagram } from "lucide-react";
 import type { PublicSettings } from "@/types/site";
 
 type SiteFooterProps = {
@@ -5,7 +6,7 @@ type SiteFooterProps = {
 };
 
 export function SiteFooter({ settings }: SiteFooterProps) {
-  const { contact } = settings;
+  const { contact, social_links } = settings;
 
   return (
     <footer className="site-footer" id="contact">
@@ -27,6 +28,30 @@ export function SiteFooter({ settings }: SiteFooterProps) {
               An independent Syrian foundation empowering youth and turning their
               energy into real societal impact.
             </p>
+            <div className="footer__socials">
+              {social_links?.facebook && (
+                <a
+                  href={social_links.facebook}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="footer__social-link"
+                  aria-label="Facebook"
+                >
+                  <Facebook size={20} />
+                </a>
+              )}
+              {social_links?.instagram && (
+                <a
+                  href={social_links.instagram}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="footer__social-link"
+                  aria-label="Instagram"
+                >
+                  <Instagram size={20} />
+                </a>
+              )}
+            </div>
           </div>
 
           <div className="footer__col">
