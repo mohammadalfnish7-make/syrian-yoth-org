@@ -28,3 +28,7 @@ export function checkRateLimit(
   bucket.count += 1;
   return { allowed: true };
 }
+
+export function clearRateLimit(key: string): void {
+  buckets.delete(key);
+}

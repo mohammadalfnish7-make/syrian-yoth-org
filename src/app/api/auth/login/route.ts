@@ -4,7 +4,7 @@ import { cookies } from "next/headers";
 import { prisma } from "@/lib/prisma";
 import { signToken, getTokenCookieOptions } from "@/lib/auth";
 import { apiError, apiSuccess, readJsonBodyLimit } from "@/lib/api-utils";
-import { checkRateLimit } from "@/lib/rate-limit";
+import { checkRateLimit, clearRateLimit } from "@/lib/rate-limit";
 
 const MAX_BODY_BYTES = 16 * 1024;
 const LOGIN_MAX_ATTEMPTS = 5;
@@ -26,25 +26,45 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const username =
-      typeof body.username === "string" ? body.username.trim().toLowerCase() : "";
+    const rawUsername =
+      typeof body.username === "string" ? body.username.trim() : "";
     const password = typeof body.password === "string" ? body.password : "";
 
-    if (!username || !password) {
+    if (!rawUsername || !password) {
       return apiError("اسم المستخدم وكلمة المرور مطلوبان.");
     }
 
     const ip = getClientIp(request);
-    const rateKey = `login:${ip}:${username}`;
+    const rateKey = `login:${ip}:${rawUsername.toLowerCase()}`;
     const rate = checkRateLimit(rateKey, LOGIN_MAX_ATTEMPTS, LOGIN_WINDOW_SEC);
     if (!rate.allowed) {
       return apiError("محاولات كثيرة. حاول لاحقاً.", 429);
     }
 
-    const admin = await prisma.admin.findUnique({
-      where: { username },
+    // Try exact findUnique first, then fallback to case-insensitive findFirst
+    let admin = await prisma.admin.findUnique({
+      where: { username: rawUsername.toLowerCase() },
       include: { governorate: true },
     });
+
+    if (!admin && rawUsername !== rawUsername.toLowerCase()) {
+      admin = await prisma.admin.findUnique({
+        where: { username: rawUsername },
+        include: { governorate: true },
+      });
+    }
+
+    if (!admin) {
+      admin = await prisma.admin.findFirst({
+        where: {
+          username: {
+            equals: rawUsername,
+            mode: "insensitive",
+          },
+        },
+        include: { governorate: true },
+      });
+    }
 
     if (!admin || !admin.isActive) {
       return apiError("بيانات الدخول غير صحيحة.", 401);
@@ -54,6 +74,8 @@ export async function POST(request: NextRequest) {
     if (!valid) {
       return apiError("بيانات الدخول غير صحيحة.", 401);
     }
+
+    clearRateLimit(rateKey);
 
     await prisma.admin.update({
       where: { id: admin.id },

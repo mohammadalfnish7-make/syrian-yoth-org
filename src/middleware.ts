@@ -49,6 +49,9 @@ export async function middleware(request: NextRequest) {
 
     try {
       await jwtVerify(token, getJwtSecret());
+      if (pathname === "/admin") {
+        return NextResponse.redirect(new URL("/admin/dashboard", request.url));
+      }
       return NextResponse.next();
     } catch {
       if (isAdminApi) {

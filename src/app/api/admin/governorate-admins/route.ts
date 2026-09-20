@@ -25,37 +25,49 @@ export async function POST(request: NextRequest) {
   if (!auth.success) return auth.response;
 
   try {
-    const { username, password, governorateId, ...rest } = await request.json();
-    void rest;
+    const body = await request.json();
+    const rawUsername =
+      typeof body.username === "string" ? body.username.trim() : "";
+    const rawPassword =
+      typeof body.password === "string" ? body.password : "";
+    const rawGovId =
+      typeof body.governorateId === "string" ? body.governorateId.trim() : "";
 
-    if (!username || !password || !governorateId) {
+    if (!rawUsername || !rawPassword || !rawGovId) {
       return apiError("اسم المستخدم وكلمة المرور والمحافظة مطلوبة.");
     }
 
-    if (password.length < 8) {
+    if (rawPassword.length < 8) {
       return apiError("كلمة المرور يجب أن تكون 8 أحرف على الأقل.");
     }
 
-    const existing = await prisma.admin.findUnique({ where: { username } });
+    const existing = await prisma.admin.findFirst({
+      where: {
+        username: {
+          equals: rawUsername,
+          mode: "insensitive",
+        },
+      },
+    });
     if (existing) {
       return apiError("اسم المستخدم مستخدم مسبقاً.");
     }
 
     const governorate = await prisma.governorate.findUnique({
-      where: { id: governorateId },
+      where: { id: rawGovId },
     });
     if (!governorate) {
       return apiError("المحافظة غير موجودة.");
     }
 
-    const passwordHash = await bcrypt.hash(password, 12);
+    const passwordHash = await bcrypt.hash(rawPassword, 12);
 
     const admin = await prisma.admin.create({
       data: {
-        username,
+        username: rawUsername.toLowerCase(),
         passwordHash,
         role: "GOVERNORATE_ADMIN",
-        governorateId,
+        governorateId: rawGovId,
       },
       include: {
         governorate: { select: { id: true, nameAr: true } },
