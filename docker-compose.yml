@@ -24,7 +24,7 @@ services:
       SEED_ADMIN_USERNAME: ${SEED_ADMIN_USERNAME:-admin}
       SEED_ADMIN_PASSWORD: ${SEED_ADMIN_PASSWORD:?SEED_ADMIN_PASSWORD must be set}
       NODE_ENV: production
-    command: sh -c "npx prisma db push && npm run db:seed"
+    command: sh -c "npm run db:push && npm run db:seed"
     depends_on:
       db:
         condition: service_healthy
