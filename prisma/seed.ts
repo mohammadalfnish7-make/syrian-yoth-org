@@ -106,7 +106,7 @@ const DEFAULT_SITE_SETTINGS = [
   {
     key: "social_links",
     value: {
-      facebook: "",
+      facebook: "https://www.facebook.com/Youthafairs",
       instagram: "",
       twitter: "",
       youtube: "",
@@ -204,6 +204,70 @@ async function main() {
     });
   }
   console.log(`✅ ${DEFAULT_SITE_SETTINGS.length} site settings seeded`);
+
+  // Seed real news from Facebook page content
+  const adminForNews = await prisma.admin.findFirst({ where: { role: "SUPER_ADMIN" } });
+  const damascusGov = await prisma.governorate.findFirst({ where: { nameEn: "Damascus" } });
+  const aleppoGov = await prisma.governorate.findFirst({ where: { nameEn: "Aleppo" } });
+  const tartusGov = await prisma.governorate.findFirst({ where: { nameEn: "Tartus" } });
+
+  if (adminForNews && damascusGov) {
+    const DEFAULT_NEWS = [
+      {
+        id: "news-1",
+        governorateId: aleppoGov?.id || damascusGov.id,
+        authorId: adminForNews.id,
+        title: "لقاء تعاون مع منظمة الإغاثة الإسلامية في حلب",
+        body: "في إطار تعزيز التعاون وتوسيع المساحات المشتركة لخدمة الشباب في سوريا، التقى رئيس مجلس إدارة شؤون الشباب د. معتز عبد الرحيم، برئيس منظمة الإغاثة الإسلامية عبر البحار - مكتب سوريا السيد لبيب الجازر، في مقر المنظمة بحلب.\n\nوتناول اللقاء سبل التعاون المستقبلي، وتفعيل البرامج والمبادرات الشابة، وتوحيد الجهود لبناء مساحات تمكّن الشباب وتفتح أمامهم آفاقاً جديدة للنمو والمشاركة.",
+        status: "published" as const,
+        publishedAt: new Date("2026-08-12"),
+      },
+      {
+        id: "news-2",
+        governorateId: aleppoGov?.id || damascusGov.id,
+        authorId: adminForNews.id,
+        title: "شراكات جديدة في حلب لدعم تمكين الشباب",
+        body: "في إطار تعزيز التعاون وتوسيع آفاق العمل الشبابي، التقى رئيس شؤون الشباب د. معتز عبد الرحيم، برئيس مجلس إدارة جمعية سواعدنا السيد عمار كعدة، في مقر الجمعية بحلب.\n\nتناول اللقاء بحث آليات التعاون المشترك بين الجانبين، وبناء برامج ومبادرات شبابية تساهم في تطوير مهارات الشباب وتمكينهم في مختلف المجالات.",
+        status: "published" as const,
+        publishedAt: new Date("2026-08-06"),
+      },
+      {
+        id: "news-3",
+        governorateId: damascusGov.id,
+        authorId: adminForNews.id,
+        title: "بوصول تجاوز 21 ألف وأكثر من 4,500 مستفيد — نواصل صناعة الأثر",
+        body: "بوصولٍ تجاوز 21 ألف، وأكثر من 4,500 مستفيد، نواصل صناعة الأثر مع شباب سوريا.\n\nفي شؤون الشباب نؤمن أن الاستثمار الحقيقي يبدأ بالإنسان، وأن كل مساحة نخلقها اليوم هي خطوة نحو مستقبلٍ أقوى لسوريا.\n\n31 فعالية · 45 متطوع نشط · 8 شراكات مؤسسية عبر محافظات حلب وطرطوس ودرعا.",
+        status: "published" as const,
+        publishedAt: new Date("2026-07-31"),
+      },
+      {
+        id: "news-4",
+        governorateId: damascusGov.id,
+        authorId: adminForNews.id,
+        title: "ملتقى \"بالعربي في دمشق\" — تجارب شابة ومساحات مشتركة",
+        body: "دمشق ليست مجرد عراقة وتاريخ.. دمشق طاقة، أفكار، وتجارب تتنفس شغفاً!\n\nبالشراكة مع شؤون الشباب ومبادرة مساحات الإعلامية، نلتقي في قلب دمشق القديمة في ملتقى \"بالعربي في دمشق\" تحت شعار \"تجارب شابة ومساحات مشتركة\"، لنستمع إلى قصص شباب استطاعوا صنع الأثر ومشاركة خبراتهم بأسلوب يلهمنا جميعاً.\n\nالمكان: خان أسعد باشا العظم – دمشق القديمة",
+        status: "published" as const,
+        publishedAt: new Date("2026-07-28"),
+      },
+      {
+        id: "news-5",
+        governorateId: tartusGov?.id || damascusGov.id,
+        authorId: adminForNews.id,
+        title: "افتتاح ملتقى يافعي شؤون الشباب في طرطوس",
+        body: "مساحةٌ جديدة… لطاقاتٍ تستحق أن تُكتشف.\n\nبحضور الأستاذ علي حلاق، وعددٍ من ممثلي الجهات الحكومية والمجتمعية، افتُتح ملتقى يافعي شؤون الشباب في طرطوس، لتنطلق مساحة جديدة لليافعين، عنوانها المشاركة، والتعلّم، واكتشاف الذات.\n\nوتضمن الافتتاح فقرات فنية وثقافية قدّمها اليافعون، إلى جانب تكريم نخبة من اليافعين المتطوعين، والإطلاق الرسمي لنادي اليافعين، ليكون امتداداً لهذه التجربة ومساحة دائمة لاحتضان الطاقات والمواهب.",
+        status: "published" as const,
+        publishedAt: new Date("2026-07-20"),
+      },
+    ];
+
+    for (const news of DEFAULT_NEWS) {
+      const existing = await prisma.news.findUnique({ where: { id: news.id } });
+      if (!existing) {
+        await prisma.news.create({ data: news });
+      }
+    }
+    console.log(`✅ ${DEFAULT_NEWS.length} news articles seeded`);
+  }
 
   const adminUsername = process.env.SEED_ADMIN_USERNAME || "admin";
   const adminPassword = process.env.SEED_ADMIN_PASSWORD;
