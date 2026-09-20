@@ -25,7 +25,8 @@ export async function POST(request: NextRequest) {
   if (!auth.success) return auth.response;
 
   try {
-    const { username, password, governorateId } = await request.json();
+    const { username, password, governorateId, ...rest } = await request.json();
+    void rest;
 
     if (!username || !password || !governorateId) {
       return apiError("اسم المستخدم وكلمة المرور والمحافظة مطلوبة.");

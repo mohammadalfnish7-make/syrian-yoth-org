@@ -11,7 +11,7 @@ export async function GET(request: NextRequest) {
       ? { governorateId: auth.session.governorateId }
       : {};
 
-  const [volunteer, partner] = await Promise.all([
+  const [volunteer, partner, program, initiative] = await Promise.all([
     prisma.volunteerRequest.findMany({
       where: govFilter,
       include: { governorate: { select: { nameAr: true } } },
@@ -19,13 +19,19 @@ export async function GET(request: NextRequest) {
     }),
     prisma.partnerRequest.findMany({
       orderBy: { submittedAt: "desc" },
-      ...(auth.session.role === "GOVERNORATE_ADMIN"
-        ? { take: 0 }
-        : {}),
+      ...(auth.session.role === "GOVERNORATE_ADMIN" ? { take: 0 } : {}),
+    }),
+    prisma.programRequest.findMany({
+      orderBy: { submittedAt: "desc" },
+      ...(auth.session.role === "GOVERNORATE_ADMIN" ? { take: 0 } : {}),
+    }),
+    prisma.initiativeRequest.findMany({
+      orderBy: { submittedAt: "desc" },
+      ...(auth.session.role === "GOVERNORATE_ADMIN" ? { take: 0 } : {}),
     }),
   ]);
 
-  return apiSuccess({ volunteer, partner });
+  return apiSuccess({ volunteer, partner, program, initiative });
 }
 
 export async function PATCH(request: NextRequest) {
@@ -63,6 +69,22 @@ export async function PATCH(request: NextRequest) {
         return apiError("ليس لديك صلاحية.", 403);
       }
       await prisma.partnerRequest.update({
+        where: { id },
+        data: { status },
+      });
+    } else if (type === "program") {
+      if (auth.session.role !== "SUPER_ADMIN") {
+        return apiError("ليس لديك صلاحية.", 403);
+      }
+      await prisma.programRequest.update({
+        where: { id },
+        data: { status },
+      });
+    } else if (type === "initiative") {
+      if (auth.session.role !== "SUPER_ADMIN") {
+        return apiError("ليس لديك صلاحية.", 403);
+      }
+      await prisma.initiativeRequest.update({
         where: { id },
         data: { status },
       });

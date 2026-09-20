@@ -6,12 +6,12 @@ import {
 } from "@/lib/site-content";
 import { FocusAreasSection } from "@/components/FocusAreasSection";
 import { getFocusAreas, getWhatWeDoSection } from "@/lib/focus-areas";
-import { InvolveCardIcon } from "@/components/InvolveCardIcon";
 import { ProgramsCarousel } from "@/components/ProgramsCarousel";
 import { GovernorateNewsSection } from "@/components/GovernorateNewsSection";
 import { BoardMembersSection } from "@/components/BoardMembersSection";
 import { HeroVideoBackground } from "@/components/HeroVideoBackground";
 import { AnimatedStatValue } from "@/components/AnimatedStatValue";
+import { InvolveSectionClient } from "@/components/InvolveSectionClient";
 import type { ProgramCardIconKey } from "@/lib/site-content";
 
 export const dynamic = "force-dynamic";
@@ -412,23 +412,7 @@ export default async function HomePage() {
             </h2>
           </div>
 
-          <div className="involve-grid" id="opportunities">
-            {INVOLVE_CARDS.map((card) => (
-              <div key={card.title.en} className="involve-card">
-                <div className={`involve-card__icon involve-card__icon--${card.icon}`}>
-                  <InvolveCardIcon name={card.icon} />
-                </div>
-                <h3 className="involve-card__title content-ar">{card.title.ar}</h3>
-                <h3 className="involve-card__title content-en">{card.title.en}</h3>
-                <p className="involve-card__desc content-ar">
-                  {card.description.ar}
-                </p>
-                <p className="involve-card__desc content-en">
-                  {card.description.en}
-                </p>
-              </div>
-            ))}
-          </div>
+          <InvolveSectionClient cards={INVOLVE_CARDS} governorates={governorates} />
         </div>
       </section>
     </main>

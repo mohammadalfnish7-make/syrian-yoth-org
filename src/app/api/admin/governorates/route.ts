@@ -4,7 +4,7 @@ import { getVerifiedSession } from "@/lib/auth";
 import { hasPermission } from "@/lib/rbac";
 import { apiSuccess } from "@/lib/api-utils";
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   const session = await getVerifiedSession();
 
   if (!session) {

@@ -175,6 +175,32 @@ model PartnerRequest {
   @@map("partner_requests")
 }
 
+model ProgramRequest {
+  id            String        @id @default(cuid())
+  fullName      String        @map("full_name")
+  phone         String
+  email         String?
+  programName   String        @map("program_name")
+  message       String?       @db.Text
+  status        RequestStatus @default(new)
+  submittedAt   DateTime      @default(now()) @map("submitted_at")
+
+  @@map("program_requests")
+}
+
+model InitiativeRequest {
+  id             String        @id @default(cuid())
+  fullName       String        @map("full_name")
+  phone          String
+  email          String?
+  initiativeIdea String        @map("initiative_idea") @db.Text
+  message        String?       @db.Text
+  status         RequestStatus @default(new)
+  submittedAt    DateTime      @default(now()) @map("submitted_at")
+
+  @@map("initiative_requests")
+}
+
 model SiteSetting {
   key       String   @id
   value     Json
