@@ -65,6 +65,9 @@ export async function PUT(request: NextRequest) {
       },
     });
 
+    const { revalidatePath } = await import("next/cache");
+    revalidatePath("/", "layout");
+
     return apiSuccess({ message: "تم حفظ الإعدادات." });
   } catch {
     return apiError("فشل حفظ الإعدادات.", 500);

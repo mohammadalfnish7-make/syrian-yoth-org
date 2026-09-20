@@ -34,6 +34,9 @@ export async function PUT(request: NextRequest) {
       });
     }
 
+    const { revalidatePath } = await import("next/cache");
+    revalidatePath("/", "layout");
+
     return apiSuccess({ message: "تم حفظ الإحصائيات." });
   } catch {
     return apiError("فشل حفظ الإحصائيات.", 500);
