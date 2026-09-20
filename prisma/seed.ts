@@ -218,7 +218,9 @@ async function main() {
         governorateId: aleppoGov?.id || damascusGov.id,
         authorId: adminForNews.id,
         title: "لقاء تعاون مع منظمة الإغاثة الإسلامية في حلب",
+        titleEn: "Cooperation Meeting with Islamic Relief Worldwide in Aleppo",
         body: "في إطار تعزيز التعاون وتوسيع المساحات المشتركة لخدمة الشباب في سوريا، التقى رئيس مجلس إدارة شؤون الشباب د. معتز عبد الرحيم، برئيس منظمة الإغاثة الإسلامية عبر البحار - مكتب سوريا السيد لبيب الجازر، في مقر المنظمة بحلب.\n\nوتناول اللقاء سبل التعاون المستقبلي، وتفعيل البرامج والمبادرات الشابة، وتوحيد الجهود لبناء مساحات تمكّن الشباب وتفتح أمامهم آفاقاً جديدة للنمو والمشاركة.",
+        bodyEn: "As part of strengthening collaboration and creating shared spaces to serve youth in Syria, Dr. Moataz Abdulrahim, Chairman of Syrian Youth Affairs, met with Mr. Labib Al-Jazer, Head of Islamic Relief Worldwide - Syria Office, at the organization's headquarters in Aleppo.\n\nThe meeting focused on future cooperation mechanisms, activating youth programs, and unifying efforts to empower youth with new opportunities for participation and leadership.",
         status: "published" as const,
         publishedAt: new Date("2026-08-12"),
       },
@@ -227,7 +229,9 @@ async function main() {
         governorateId: aleppoGov?.id || damascusGov.id,
         authorId: adminForNews.id,
         title: "شراكات جديدة في حلب لدعم تمكين الشباب",
+        titleEn: "New Partnerships in Aleppo to Advance Youth Empowerment",
         body: "في إطار تعزيز التعاون وتوسيع آفاق العمل الشبابي، التقى رئيس شؤون الشباب د. معتز عبد الرحيم، برئيس مجلس إدارة جمعية سواعدنا السيد عمار كعدة، في مقر الجمعية بحلب.\n\nتناول اللقاء بحث آليات التعاون المشترك بين الجانبين، وبناء برامج ومبادرات شبابية تساهم في تطوير مهارات الشباب وتمكينهم في مختلف المجالات.",
+        bodyEn: "To expand youth initiatives and build impactful local partnerships, Dr. Moataz Abdulrahim, Chairman of Syrian Youth Affairs, met with Mr. Ammar Kaadeh, Chairman of Sawaedna Association, at the association's office in Aleppo.\n\nThe discussions centered on collaborative programs and initiatives that develop youth skills and enable them across key development fields.",
         status: "published" as const,
         publishedAt: new Date("2026-08-06"),
       },
@@ -236,7 +240,9 @@ async function main() {
         governorateId: damascusGov.id,
         authorId: adminForNews.id,
         title: "بوصول تجاوز 21 ألف وأكثر من 4,500 مستفيد — نواصل صناعة الأثر",
+        titleEn: "Over 21,000 Reached and 4,500 Beneficiaries — Continuing to Make an Impact",
         body: "بوصولٍ تجاوز 21 ألف، وأكثر من 4,500 مستفيد، نواصل صناعة الأثر مع شباب سوريا.\n\nفي شؤون الشباب نؤمن أن الاستثمار الحقيقي يبدأ بالإنسان، وأن كل مساحة نخلقها اليوم هي خطوة نحو مستقبلٍ أقوى لسوريا.\n\n31 فعالية · 45 متطوع نشط · 8 شراكات مؤسسية عبر محافظات حلب وطرطوس ودرعا.",
+        bodyEn: "Reaching more than 21,000 people and engaging over 4,500 direct beneficiaries, we continue driving positive change with Syria's youth.\n\nAt Syrian Youth Affairs, we believe true investment begins with people, and every space we build today is a step toward a stronger future for Syria.\n\n31 events · 45 active volunteers · 8 institutional partnerships across Aleppo, Tartus, and Daraa.",
         status: "published" as const,
         publishedAt: new Date("2026-07-31"),
       },
@@ -245,7 +251,9 @@ async function main() {
         governorateId: damascusGov.id,
         authorId: adminForNews.id,
         title: "ملتقى \"بالعربي في دمشق\" — تجارب شابة ومساحات مشتركة",
+        titleEn: "\"In Arabic in Damascus\" Forum — Youth Experiences & Shared Spaces",
         body: "دمشق ليست مجرد عراقة وتاريخ.. دمشق طاقة، أفكار، وتجارب تتنفس شغفاً!\n\nبالشراكة مع شؤون الشباب ومبادرة مساحات الإعلامية، نلتقي في قلب دمشق القديمة في ملتقى \"بالعربي في دمشق\" تحت شعار \"تجارب شابة ومساحات مشتركة\"، لنستمع إلى قصص شباب استطاعوا صنع الأثر ومشاركة خبراتهم بأسلوب يلهمنا جميعاً.\n\nالمكان: خان أسعد باشا العظم – دمشق القديمة",
+        bodyEn: "Damascus is not only deep-rooted history; Damascus is energy, ideas, and experiences vibrant with passion!\n\nIn partnership with Syrian Youth Affairs and Masahat Media Initiative, we gather in the heart of Old Damascus for the 'In Arabic in Damascus' forum under the theme 'Youth Experiences and Shared Spaces,' highlighting inspiring stories of youth creating lasting impact.\n\nVenue: Khan As'ad Pasha al-Azem – Old Damascus",
         status: "published" as const,
         publishedAt: new Date("2026-07-28"),
       },
@@ -254,7 +262,9 @@ async function main() {
         governorateId: tartusGov?.id || damascusGov.id,
         authorId: adminForNews.id,
         title: "افتتاح ملتقى يافعي شؤون الشباب في طرطوس",
+        titleEn: "Opening of the Syrian Youth Adolescents Forum in Tartus",
         body: "مساحةٌ جديدة… لطاقاتٍ تستحق أن تُكتشف.\n\nبحضور الأستاذ علي حلاق، وعددٍ من ممثلي الجهات الحكومية والمجتمعية، افتُتح ملتقى يافعي شؤون الشباب في طرطوس، لتنطلق مساحة جديدة لليافعين، عنوانها المشاركة، والتعلّم، واكتشاف الذات.\n\nوتضمن الافتتاح فقرات فنية وثقافية قدّمها اليافعون، إلى جانب تكريم نخبة من اليافعين المتطوعين، والإطلاق الرسمي لنادي اليافعين، ليكون امتداداً لهذه التجربة ومساحة دائمة لاحتضان الطاقات والمواهب.",
+        bodyEn: "A new empowering space for talents waiting to be discovered.\n\nIn the presence of Mr. Ali Hallaq along with community and institutional partners, the Syrian Youth Adolescents Forum was inaugurated in Tartus, providing young people with an open environment for participation, learning, and self-expression.\n\nThe opening featured cultural and artistic presentations, honors for standout youth volunteers, and the launch of the Adolescents Club as a lasting home for creative potential.",
         status: "published" as const,
         publishedAt: new Date("2026-07-20"),
       },
@@ -264,6 +274,14 @@ async function main() {
       const existing = await prisma.news.findUnique({ where: { id: news.id } });
       if (!existing) {
         await prisma.news.create({ data: news });
+      } else {
+        await prisma.news.update({
+          where: { id: news.id },
+          data: {
+            titleEn: news.titleEn,
+            bodyEn: news.bodyEn,
+          },
+        });
       }
     }
     console.log(`✅ ${DEFAULT_NEWS.length} news articles seeded`);

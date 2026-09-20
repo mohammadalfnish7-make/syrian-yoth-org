@@ -30,7 +30,7 @@ export async function POST(request: NextRequest) {
 
   try {
     const body = await request.json();
-    const { title, body: content, coverImageUrl, status } = body;
+    const { title, titleEn, body: content, bodyEn, coverImageUrl, status } = body;
 
     if (!title || !content) {
       return apiError("العنوان والمحتوى مطلوبان.");
@@ -47,7 +47,9 @@ export async function POST(request: NextRequest) {
     const news = await prisma.news.create({
       data: {
         title,
+        titleEn: titleEn || null,
         body: content,
+        bodyEn: bodyEn || null,
         coverImageUrl: coverImageUrl || null,
         status: status || "draft",
         governorateId,

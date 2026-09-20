@@ -60,7 +60,8 @@ export function useDragScroll(ref: RefObject<HTMLElement | null>) {
 
       if (drag.dragged) {
         event.preventDefault();
-        element.scrollLeft = drag.startScrollLeft - deltaX;
+        const isRtl = getComputedStyle(element).direction === "rtl";
+        element.scrollLeft = drag.startScrollLeft + (isRtl ? deltaX : -deltaX);
       }
     },
     [ref]

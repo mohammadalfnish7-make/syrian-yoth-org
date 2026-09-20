@@ -30,13 +30,15 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
     if (!existing) return apiError("الخبر غير موجود.", 404);
 
     const body = await request.json();
-    const { title, body: content, coverImageUrl, status } = body;
+    const { title, titleEn, body: content, bodyEn, coverImageUrl, status } = body;
 
     const news = await prisma.news.update({
       where: { id },
       data: {
         ...(title && { title }),
+        ...(titleEn !== undefined && { titleEn: titleEn || null }),
         ...(content && { body: content }),
+        ...(bodyEn !== undefined && { bodyEn: bodyEn || null }),
         ...(coverImageUrl !== undefined && { coverImageUrl }),
         ...(status && {
           status,

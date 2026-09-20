@@ -151,7 +151,9 @@ async function getNews() {
       select: {
         id: true,
         title: true,
+        titleEn: true,
         body: true,
+        bodyEn: true,
         coverImageUrl: true,
         publishedAt: true,
         governorateId: true,

@@ -17,7 +17,7 @@ export function SiteHeader({ settings }: { settings?: PublicSettings }) {
       <div className="container-yaf header__inner">
         <Link href="/" className="site-brand">
           {settings?.branding?.logoUrl ? (
-            <img src={settings.branding.logoUrl} alt="مؤسسة شباب سوريا" className="h-12 w-auto object-contain" />
+            <img src={settings.branding.logoUrl} alt="مؤسسة شباب سوريا" className="h-16 w-auto object-contain" />
           ) : (
             <>
               <span className="site-brand__name content-ar">مؤسسة شباب سوريا</span>

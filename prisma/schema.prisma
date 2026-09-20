@@ -61,7 +61,9 @@ model News {
   governorateId String     @map("governorate_id")
   authorId      String     @map("author_id")
   title         String
+  titleEn       String?    @map("title_en")
   body          String     @db.Text
+  bodyEn        String?    @map("body_en") @db.Text
   coverImageUrl String?    @map("cover_image_url")
   status        NewsStatus @default(draft)
   publishedAt   DateTime?  @map("published_at")

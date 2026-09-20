@@ -21,7 +21,9 @@ export type PublicGovernorate = {
 export type PublicNewsItem = {
   id: string;
   title: string;
+  titleEn?: string | null;
   body: string;
+  bodyEn?: string | null;
   coverImageUrl: string | null;
   publishedAt: string | null;
   governorateId: string;
@@ -196,12 +198,15 @@ export function GovernorateNewsSection({
     }
 
     const trackRect = track.getBoundingClientRect();
+    const isRtl = getComputedStyle(track).direction === "rtl";
     let closest = 0;
     let minDist = Infinity;
 
     slides.forEach((slide, i) => {
       const slideRect = slide.getBoundingClientRect();
-      const dist = Math.abs(slideRect.left - trackRect.left);
+      const dist = isRtl
+        ? Math.abs(slideRect.right - trackRect.right)
+        : Math.abs(slideRect.left - trackRect.left);
       if (dist < minDist) {
         minDist = dist;
         closest = i;
@@ -215,7 +220,17 @@ export function GovernorateNewsSection({
 
   useEffect(() => {
     setNewsIndex(0);
-    newsTrackRef.current?.scrollTo({ left: 0 });
+    const track = newsTrackRef.current;
+    if (!track) return;
+    const isRtl = getComputedStyle(track).direction === "rtl";
+    if (isRtl) {
+      const slides = track.querySelectorAll<HTMLElement>(".news-slide");
+      if (slides[0]) {
+        slides[0].scrollIntoView({ inline: "start", block: "nearest" });
+      }
+    } else {
+      track.scrollTo({ left: 0 });
+    }
   }, [selectedGovernorateId]);
 
   useEffect(() => {
@@ -341,23 +356,25 @@ export function GovernorateNewsSection({
             <div className="gov-news__nav">
               <button
                 type="button"
-                className="programs-carousel__btn"
+                className="programs-carousel__btn gov-news__nav-btn"
                 onClick={() => scrollNewsTo(Math.max(0, newsIndex - 1))}
                 disabled={!canNewsPrev}
                 aria-label="Previous news"
               >
-                <ChevronRight size={20} />
+                <ChevronRight size={20} className="content-ar" />
+                <ChevronLeft size={20} className="content-en" />
               </button>
               <button
                 type="button"
-                className="programs-carousel__btn"
+                className="programs-carousel__btn gov-news__nav-btn"
                 onClick={() =>
                   scrollNewsTo(Math.min(filteredNews.length - 1, newsIndex + 1))
                 }
                 disabled={!canNewsNext}
                 aria-label="Next news"
               >
-                <ChevronLeft size={20} />
+                <ChevronLeft size={20} className="content-ar" />
+                <ChevronRight size={20} className="content-en" />
               </button>
             </div>
           )}
@@ -402,10 +419,15 @@ export function GovernorateNewsSection({
                         </span>
                       </time>
                     </div>
-                    <h4 className="news-slide__title">{item.title}</h4>
-                    <p className="news-slide__excerpt">
+                    <h4 className="news-slide__title content-ar">{item.title}</h4>
+                    <h4 className="news-slide__title content-en">{item.titleEn || item.title}</h4>
+                    <p className="news-slide__excerpt content-ar">
                       {item.body.slice(0, 220)}
                       {item.body.length > 220 ? "…" : ""}
+                    </p>
+                    <p className="news-slide__excerpt content-en">
+                      {(item.bodyEn || item.body).slice(0, 220)}
+                      {(item.bodyEn || item.body).length > 220 ? "…" : ""}
                     </p>
                   </div>
                 </article>

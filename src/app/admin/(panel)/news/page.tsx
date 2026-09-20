@@ -12,7 +12,9 @@ import { Plus, Loader2, Trash2, Eye, EyeOff, Pencil, X } from "lucide-react";
 type NewsItem = {
   id: string;
   title: string;
+  titleEn?: string | null;
   body: string;
+  bodyEn?: string | null;
   coverImageUrl: string | null;
   status: "draft" | "published";
   publishedAt: string | null;
@@ -21,7 +23,9 @@ type NewsItem = {
 
 type NewsForm = {
   title: string;
+  titleEn: string;
   body: string;
+  bodyEn: string;
   coverImageUrl: string | null;
   status: "draft" | "published";
   governorateId: string;
@@ -35,7 +39,9 @@ type AdminSession = {
 
 const EMPTY_FORM: NewsForm = {
   title: "",
+  titleEn: "",
   body: "",
+  bodyEn: "",
   coverImageUrl: null,
   status: "draft",
   governorateId: "",
@@ -114,7 +120,9 @@ export default function NewsPage() {
     setFormError("");
     setForm({
       title: item.title,
+      titleEn: item.titleEn || "",
       body: item.body,
+      bodyEn: item.bodyEn || "",
       coverImageUrl: item.coverImageUrl,
       status: item.status,
       governorateId: defaultGovernorateId,
@@ -139,7 +147,9 @@ export default function NewsPage() {
     const payload = editingId
       ? {
           title: form.title,
+          titleEn: form.titleEn,
           body: form.body,
+          bodyEn: form.bodyEn,
           coverImageUrl: form.coverImageUrl,
           status: form.status,
         }
@@ -254,27 +264,54 @@ export default function NewsPage() {
             ) : null}
             <div className="admin-field">
               <label>
-                <span className="content-ar">العنوان</span>
-                <span className="content-en">Title</span>
+                <span className="content-ar">العنوان (بالعربية) *</span>
+                <span className="content-en">Title (Arabic) *</span>
               </label>
               <input
                 className="admin-field__input admin-field__input--plain"
                 value={form.title}
                 onChange={(e) => setForm({ ...form, title: e.target.value })}
                 required
+                dir="rtl"
               />
             </div>
             <div className="admin-field">
               <label>
-                <span className="content-ar">المحتوى</span>
-                <span className="content-en">Content</span>
+                <span className="content-ar">العنوان (بالإنجليزية)</span>
+                <span className="content-en">Title (English)</span>
+              </label>
+              <input
+                className="admin-field__input admin-field__input--plain"
+                value={form.titleEn}
+                onChange={(e) => setForm({ ...form, titleEn: e.target.value })}
+                dir="ltr"
+              />
+            </div>
+            <div className="admin-field">
+              <label>
+                <span className="content-ar">المحتوى (بالعربية) *</span>
+                <span className="content-en">Content (Arabic) *</span>
               </label>
               <textarea
                 className="admin-field__input admin-field__input--plain"
-                rows={5}
+                rows={4}
                 value={form.body}
                 onChange={(e) => setForm({ ...form, body: e.target.value })}
                 required
+                dir="rtl"
+              />
+            </div>
+            <div className="admin-field">
+              <label>
+                <span className="content-ar">المحتوى (بالإنجليزية)</span>
+                <span className="content-en">Content (English)</span>
+              </label>
+              <textarea
+                className="admin-field__input admin-field__input--plain"
+                rows={4}
+                value={form.bodyEn}
+                onChange={(e) => setForm({ ...form, bodyEn: e.target.value })}
+                dir="ltr"
               />
             </div>
             <ImageUploader
@@ -347,7 +384,10 @@ export default function NewsPage() {
             ) : (
               news.map((item) => (
                 <tr key={item.id}>
-                  <td>{item.title}</td>
+                  <td>
+                    <span className="content-ar">{item.title}</span>
+                    <span className="content-en">{item.titleEn || item.title}</span>
+                  </td>
                   <td>
                     <span className="content-ar">{item.governorate.nameAr}</span>
                     <span className="content-en">
