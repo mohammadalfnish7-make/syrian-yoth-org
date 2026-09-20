@@ -16,7 +16,11 @@ export async function GET(request: NextRequest) {
   });
 
   return apiSuccess(
-    admins.map(({ passwordHash, ...admin }) => admin)
+    admins.map((admin) => {
+      const { passwordHash: _hash, ...rest } = admin;
+      void _hash;
+      return rest;
+    })
   );
 }
 
@@ -80,7 +84,7 @@ export async function POST(request: NextRequest) {
         action: "create",
         entityType: "admin",
         entityId: admin.id,
-        details: { username, governorateId },
+        details: { username: admin.username, governorateId: rawGovId },
       },
     });
 
