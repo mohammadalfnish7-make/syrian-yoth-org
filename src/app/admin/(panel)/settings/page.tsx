@@ -222,7 +222,7 @@ export default function AdminSettingsPage() {
           <h2 className="admin-card__title">معلومات من نحن</h2>
           <div className="space-y-4">
             <div>
-              <label className="block text-sm mb-1">سنوات الخبرة / العطاء (مثال: +15)</label>
+              <label className="block text-sm mb-1">رقم الحضور في قسم من نحن (مثال: 10 محافظات)</label>
               <input
                 type="text"
                 value={settings.about?.yearsOfExperience || ""}

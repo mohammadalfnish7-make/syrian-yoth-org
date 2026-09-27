@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import { PROFILE_FOCUS_AREAS } from "@/lib/profile-content";
 import type { FocusAreaIconKey } from "@/lib/site-content";
 
 export type WhatWeDoSection = {
@@ -37,58 +38,21 @@ const DEFAULT_SECTION: WhatWeDoSection = {
     "We work across five strategic pillars to build a generation capable of leading Syria's future",
 };
 
-const DEFAULT_FOCUS_AREAS: PublicFocusArea[] = [
-  {
-    id: "leadership",
-    icon: "leadership",
-    image: "/images/hero/homs-youth.webp",
-    title: { ar: "القيادة", en: "Leadership" },
-    description: {
-      ar: "تنمية قيادات شبابية وبناء مهارات القيادة والتأثير",
-      en: "Youth leadership development and leadership skills building",
-    },
-  },
-  {
-    id: "skills",
-    icon: "skills",
-    image: "/images/hero/ramadan-session.webp",
-    title: { ar: "المهارات والتعلم", en: "Skills & Learning" },
-    description: {
-      ar: "برامج تدريبية عملية تجهّز الشباب لسوق العمل والمستقبل",
-      en: "Practical training programs preparing youth for work and the future",
-    },
-  },
-  {
-    id: "initiatives",
-    icon: "initiatives",
-    image: "/videos/hero-poster.jpg",
-    title: { ar: "المبادرات الشبابية", en: "Youth Initiatives" },
-    description: {
-      ar: "دعم المبادرات المحلية التي يقودها الشباب في مجتمعاتهم",
-      en: "Supporting local initiatives led by youth in their communities",
-    },
-  },
-  {
-    id: "community",
-    icon: "community",
-    image: "/images/hero/ramadan-session.webp",
-    title: { ar: "الانخراط المجتمعي", en: "Community Engagement" },
-    description: {
-      ar: "تعزيز مشاركة الشباب في الحياة المجتمعية والتطوع",
-      en: "Strengthening youth participation in community life and volunteering",
-    },
-  },
-  {
-    id: "opportunities",
-    icon: "opportunities",
-    image: "/images/hero/homs-youth.webp",
-    title: { ar: "الفرص", en: "Opportunities" },
-    description: {
-      ar: "ربط الشباب بفرص التدريب والتطوع والشراكات",
-      en: "Connecting youth with training, volunteering, and partnership opportunities",
-    },
-  },
-];
+const LEGACY_FOCUS_TITLES = new Set([
+  "القيادة",
+  "المهارات والتعلم",
+  "المبادرات الشبابية",
+  "الانخراط المجتمعي",
+  "الفرص",
+]);
+
+const DEFAULT_FOCUS_AREAS: PublicFocusArea[] = PROFILE_FOCUS_AREAS.map((area) => ({
+  id: area.id,
+  icon: parseIcon(area.icon),
+  image: area.imageUrl,
+  title: { ar: area.titleAr, en: area.titleEn },
+  description: { ar: area.descriptionAr, en: area.descriptionEn },
+}));
 
 const ICON_FALLBACK_IMAGES: Record<FocusAreaIconKey, string> = {
   leadership: "/images/hero/homs-youth.webp",
@@ -143,7 +107,9 @@ export async function getFocusAreas(): Promise<PublicFocusArea[]> {
       orderBy: { sortOrder: "asc" },
     });
 
-    if (rows.length === 0) return getDefaultFocusAreas();
+    if (rows.length === 0 || rows.every((row) => LEGACY_FOCUS_TITLES.has(row.titleAr))) {
+      return getDefaultFocusAreas();
+    }
 
     return rows.map((row) => {
       const icon = parseIcon(row.icon);

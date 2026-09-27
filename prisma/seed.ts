@@ -1,5 +1,13 @@
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
+import {
+  FALLBACK_EVENTS,
+  PROFILE_FOCUS_AREAS,
+  PROFILE_IMPACT_STATS,
+  PROFILE_MISSION,
+  PROFILE_PROGRAMS,
+  PROFILE_VISION,
+} from "../src/lib/profile-content";
 
 const prisma = new PrismaClient();
 
@@ -20,65 +28,9 @@ const SYRIAN_GOVERNORATES = [
   { nameAr: "القنيطرة", nameEn: "Quneitra", sortOrder: 14 },
 ];
 
-const DEFAULT_IMPACT_STATS = [
-  { labelAr: "متطوع", labelEn: "Volunteers", value: "1500+", icon: "users", sortOrder: 1 },
-  { labelAr: "شاب مستفيد", labelEn: "Youth Reached", value: "500000+", icon: "heart", sortOrder: 2 },
-  { labelAr: "محافظة", labelEn: "Governorates", value: "10", icon: "map", sortOrder: 3 },
-  { labelAr: "فعالية", labelEn: "Events", value: "100+", icon: "calendar", sortOrder: 4 },
-];
+const DEFAULT_IMPACT_STATS = PROFILE_IMPACT_STATS;
 
-const DEFAULT_FOCUS_AREAS = [
-  {
-    id: "focus-1",
-    titleAr: "القيادة",
-    titleEn: "Leadership",
-    descriptionAr: "تنمية قيادات شبابية وبناء مهارات القيادة والتأثير",
-    descriptionEn: "Youth leadership development and leadership skills building",
-    imageUrl: "/images/hero/homs-youth.webp",
-    icon: "leadership",
-    sortOrder: 1,
-  },
-  {
-    id: "focus-2",
-    titleAr: "المهارات والتعلم",
-    titleEn: "Skills & Learning",
-    descriptionAr: "برامج تدريبية عملية تجهّز الشباب لسوق العمل والمستقبل",
-    descriptionEn: "Practical training programs preparing youth for work and the future",
-    imageUrl: "/images/hero/ramadan-session.webp",
-    icon: "skills",
-    sortOrder: 2,
-  },
-  {
-    id: "focus-3",
-    titleAr: "المبادرات الشبابية",
-    titleEn: "Youth Initiatives",
-    descriptionAr: "دعم المبادرات المحلية التي يقودها الشباب في مجتمعاتهم",
-    descriptionEn: "Supporting local initiatives led by youth in their communities",
-    imageUrl: "/videos/hero-poster.jpg",
-    icon: "initiatives",
-    sortOrder: 3,
-  },
-  {
-    id: "focus-4",
-    titleAr: "الانخراط المجتمعي",
-    titleEn: "Community Engagement",
-    descriptionAr: "تعزيز مشاركة الشباب في الحياة المجتمعية والتطوع",
-    descriptionEn: "Strengthening youth participation in community life and volunteering",
-    imageUrl: "/images/hero/ramadan-session.webp",
-    icon: "community",
-    sortOrder: 4,
-  },
-  {
-    id: "focus-5",
-    titleAr: "الفرص",
-    titleEn: "Opportunities",
-    descriptionAr: "ربط الشباب بفرص التدريب والتطوع والشراكات",
-    descriptionEn: "Connecting youth with training, volunteering, and partnership opportunities",
-    imageUrl: "/images/hero/homs-youth.webp",
-    icon: "opportunities",
-    sortOrder: 5,
-  },
-];
+const DEFAULT_FOCUS_AREAS = PROFILE_FOCUS_AREAS;
 
 const DEFAULT_WHAT_WE_DO = {
   key: "what_we_do",
@@ -125,14 +77,9 @@ const DEFAULT_SITE_SETTINGS = [
   {
     key: "about",
     value: {
-      mission: {
-        ar: "تمكين الشباب السوري من تحويل طاقتهم اللامنة إلى أثر حقيقي في مجتمعهم ووطنهم.",
-        en: "Empowering Syrian youth to transform their latent energy into real impact in their communities and nation.",
-      },
-      vision: {
-        ar: "أن نكون المؤسسة الشبابية الرائدة في سوريا، نصنع جيلاً يحوّل طاقته إلى أثر، ووعيه إلى فعل، وانتماءه إلى بناء.",
-        en: "To be Syria's leading youth foundation — shaping a generation that turns energy into impact, awareness into action, and belonging into building.",
-      },
+      mission: PROFILE_MISSION,
+      vision: PROFILE_VISION,
+      yearsOfExperience: "10",
       values: [
         { ar: "الكرامة", en: "Dignity" },
         { ar: "المسؤولية", en: "Responsibility" },
@@ -173,9 +120,15 @@ async function main() {
 
   for (const stat of DEFAULT_IMPACT_STATS) {
     await prisma.impactStat.upsert({
-      where: { id: `stat-${stat.sortOrder}` },
-      update: {},
-      create: { id: `stat-${stat.sortOrder}`, ...stat },
+      where: { id: stat.id },
+      update: {
+        labelAr: stat.labelAr,
+        labelEn: stat.labelEn,
+        value: stat.value,
+        noteAr: stat.noteAr,
+        noteEn: stat.noteEn,
+      },
+      create: stat,
     });
   }
   console.log(`✅ ${DEFAULT_IMPACT_STATS.length} impact stats seeded`);
@@ -183,7 +136,13 @@ async function main() {
   for (const area of DEFAULT_FOCUS_AREAS) {
     await prisma.focusArea.upsert({
       where: { id: area.id },
-      update: {},
+      update: {
+        titleAr: area.titleAr,
+        titleEn: area.titleEn,
+        descriptionAr: area.descriptionAr,
+        descriptionEn: area.descriptionEn,
+        icon: area.icon,
+      },
       create: area,
     });
   }
@@ -199,10 +158,81 @@ async function main() {
   for (const setting of DEFAULT_SITE_SETTINGS) {
     await prisma.siteSetting.upsert({
       where: { key: setting.key },
-      update: {},
+      update: setting.key === "about" ? { value: setting.value } : {},
       create: setting,
     });
   }
+
+  for (const program of PROFILE_PROGRAMS) {
+    await prisma.program.upsert({
+      where: { id: program.id },
+      update: {
+        slug: program.slug,
+        title: program.titleAr,
+        titleEn: program.titleEn,
+        description: program.descriptionAr,
+        descriptionEn: program.descriptionEn,
+        audienceAr: program.audienceAr,
+        audienceEn: program.audienceEn,
+        scheduleAr: program.scheduleAr,
+        scheduleEn: program.scheduleEn,
+        whereAr: program.whereAr,
+        whereEn: program.whereEn,
+        outcomesAr: program.outcomesAr,
+        outcomesEn: program.outcomesEn,
+        sortOrder: program.sortOrder,
+        isActive: true,
+      },
+      create: {
+        id: program.id,
+        slug: program.slug,
+        title: program.titleAr,
+        titleEn: program.titleEn,
+        description: program.descriptionAr,
+        descriptionEn: program.descriptionEn,
+        audienceAr: program.audienceAr,
+        audienceEn: program.audienceEn,
+        scheduleAr: program.scheduleAr,
+        scheduleEn: program.scheduleEn,
+        whereAr: program.whereAr,
+        whereEn: program.whereEn,
+        outcomesAr: program.outcomesAr,
+        outcomesEn: program.outcomesEn,
+        sortOrder: program.sortOrder,
+      },
+    });
+  }
+  console.log(`✅ ${PROFILE_PROGRAMS.length} programs seeded`);
+
+  for (const event of FALLBACK_EVENTS) {
+    await prisma.event.upsert({
+      where: { slug: event.slug },
+      update: {
+        titleAr: event.titleAr,
+        titleEn: event.titleEn,
+        descriptionAr: event.descriptionAr,
+        descriptionEn: event.descriptionEn,
+        cityAr: event.cityAr,
+        cityEn: event.cityEn,
+        isRolling: event.isRolling,
+        registerPath: event.registerPath,
+        isActive: true,
+      },
+      create: {
+        id: event.id,
+        slug: event.slug,
+        titleAr: event.titleAr,
+        titleEn: event.titleEn,
+        descriptionAr: event.descriptionAr,
+        descriptionEn: event.descriptionEn,
+        cityAr: event.cityAr,
+        cityEn: event.cityEn,
+        isRolling: event.isRolling,
+        registerPath: event.registerPath,
+      },
+    });
+  }
+  console.log(`✅ ${FALLBACK_EVENTS.length} events seeded`);
   console.log(`✅ ${DEFAULT_SITE_SETTINGS.length} site settings seeded`);
 
   // Seed real news from Facebook page content

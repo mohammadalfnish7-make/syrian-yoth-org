@@ -17,10 +17,26 @@ function tryPlay(video: HTMLVideoElement) {
 export function HeroVideoBackground() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [videoReady, setVideoReady] = useState(false);
+  const [allowVideo, setAllowVideo] = useState(true);
+
+  useEffect(() => {
+    const connection = (
+      navigator as Navigator & {
+        connection?: { saveData?: boolean; effectiveType?: string };
+      }
+    ).connection;
+    if (
+      connection?.saveData ||
+      connection?.effectiveType === "slow-2g" ||
+      connection?.effectiveType === "2g"
+    ) {
+      setAllowVideo(false);
+    }
+  }, []);
 
   useEffect(() => {
     const video = videoRef.current;
-    if (!video) return;
+    if (!video || !allowVideo) return;
 
     if (typeof window.matchMedia !== "function") {
       tryPlay(video);
@@ -48,7 +64,7 @@ export function HeroVideoBackground() {
     return () => {
       motionQuery.removeEventListener("change", applyMotionPreference);
     };
-  }, []);
+  }, [allowVideo]);
 
   return (
     <div className="hero-section__media" aria-hidden="true">
@@ -60,19 +76,21 @@ export function HeroVideoBackground() {
         decoding="async"
         className={`hero-section__poster${videoReady ? " hero-section__poster--hidden" : ""}`}
       />
-      <video
-        ref={videoRef}
-        className={`hero-section__video${videoReady ? " hero-section__video--visible" : ""}`}
-        autoPlay
-        muted
-        loop
-        playsInline
-        preload="none"
-        poster={POSTER_SRC}
-        onCanPlay={() => setVideoReady(true)}
-      >
-        <source src={VIDEO_SRC} type="video/mp4" />
-      </video>
+      {allowVideo ? (
+        <video
+          ref={videoRef}
+          className={`hero-section__video${videoReady ? " hero-section__video--visible" : ""}`}
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="none"
+          poster={POSTER_SRC}
+          onCanPlay={() => setVideoReady(true)}
+        >
+          <source src={VIDEO_SRC} type="video/mp4" />
+        </video>
+      ) : null}
       <div className="hero-section__overlay" />
     </div>
   );

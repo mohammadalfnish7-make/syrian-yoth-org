@@ -1,3 +1,5 @@
+import { ContactLinks } from "@/components/ContactLinks";
+import { LocaleLink } from "@/components/LocaleLink";
 import type { PublicSettings } from "@/types/site";
 
 function FacebookIcon({ size = 20 }: { size?: number }) {
@@ -37,11 +39,11 @@ export function SiteFooter({ settings }: SiteFooterProps) {
               <span className="site-brand__tag content-en">Syria</span>
             </div>
             <p className="footer__desc content-ar">
-              مؤسسة سورية مستقلة تمكّن الشباب وتحوّل طاقتهم إلى أثر مجتمعي حقيقي.
+              مؤسسة مجتمع مدني سورية مستقلة، تُعنى ببناء اليافعين والشباب في أبعادهم كافة.
             </p>
             <p className="footer__desc content-en">
-              An independent Syrian foundation empowering youth and turning their
-              energy into real societal impact.
+              An independent Syrian civil society organization dedicated to the holistic
+              development of adolescents and youth.
             </p>
             <div className="footer__socials">
               {social_links?.facebook && (
@@ -74,36 +76,36 @@ export function SiteFooter({ settings }: SiteFooterProps) {
             <h4 className="footer__heading content-en">Quick Links</h4>
             <ul className="footer__links">
               <li>
-                <a href="#about" className="content-ar">
+                <LocaleLink href="/about" className="content-ar">
                   من نحن
-                </a>
-                <a href="#about" className="content-en">
+                </LocaleLink>
+                <LocaleLink href="/about" className="content-en">
                   About
-                </a>
+                </LocaleLink>
               </li>
               <li>
-                <a href="#programs" className="content-ar">
+                <LocaleLink href="/programs" className="content-ar">
                   البرامج
-                </a>
-                <a href="#programs" className="content-en">
+                </LocaleLink>
+                <LocaleLink href="/programs" className="content-en">
                   Programs
-                </a>
+                </LocaleLink>
               </li>
               <li>
-                <a href="#news" className="content-ar">
+                <LocaleLink href="/news" className="content-ar">
                   الأخبار
-                </a>
-                <a href="#news" className="content-en">
+                </LocaleLink>
+                <LocaleLink href="/news" className="content-en">
                   News
-                </a>
+                </LocaleLink>
               </li>
               <li>
-                <a href="#involve" className="content-ar">
+                <LocaleLink href="/get-involved" className="content-ar">
                   شارك معنا
-                </a>
-                <a href="#involve" className="content-en">
+                </LocaleLink>
+                <LocaleLink href="/get-involved" className="content-en">
                   Get Involved
-                </a>
+                </LocaleLink>
               </li>
             </ul>
           </div>
@@ -111,18 +113,7 @@ export function SiteFooter({ settings }: SiteFooterProps) {
           <div className="footer__col">
             <h4 className="footer__heading content-ar">تواصل</h4>
             <h4 className="footer__heading content-en">Contact</h4>
-            <ul className="footer__contact">
-              <li>
-                <a href={`mailto:${contact.email}`}>{contact.email}</a>
-              </li>
-              <li>
-                <a href={`tel:${contact.phone}`}>{contact.phone}</a>
-              </li>
-              <li>
-                <span className="content-ar">{contact.address}</span>
-                <span className="content-en">{contact.address}</span>
-              </li>
-            </ul>
+            <ContactLinks contact={contact} />
           </div>
         </div>
 
@@ -134,6 +125,26 @@ export function SiteFooter({ settings }: SiteFooterProps) {
             © {new Date().getFullYear()} Syrian Youth Foundation. All rights
             reserved.
           </p>
+          <nav className="footer__legal" aria-label="Legal">
+            <LocaleLink href="/privacy" className="content-ar">
+              الخصوصية
+            </LocaleLink>
+            <LocaleLink href="/privacy" className="content-en">
+              Privacy
+            </LocaleLink>
+            <LocaleLink href="/safeguarding" className="content-ar">
+              الحماية
+            </LocaleLink>
+            <LocaleLink href="/safeguarding" className="content-en">
+              Safeguarding
+            </LocaleLink>
+            <LocaleLink href="/accessibility" className="content-ar">
+              الإتاحة
+            </LocaleLink>
+            <LocaleLink href="/accessibility" className="content-en">
+              Accessibility
+            </LocaleLink>
+          </nav>
         </div>
       </div>
     </footer>

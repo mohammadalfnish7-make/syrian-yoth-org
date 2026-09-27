@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import { Loader2, X } from "lucide-react";
-import type { InvolveCardIconKey } from "@/lib/site-content";
+import { INVOLVE_CARDS, type InvolveCardIconKey } from "@/lib/site-content";
+import { LocaleLink } from "@/components/LocaleLink";
 
 type Governorate = { id: string; nameAr: string };
 
@@ -11,6 +12,7 @@ type RequestModalProps = {
   onClose: () => void;
   type: InvolveCardIconKey | null;
   governorates: Governorate[];
+  initialProgramName?: string;
 };
 
 export function RequestModal({
@@ -18,6 +20,7 @@ export function RequestModal({
   onClose,
   type,
   governorates,
+  initialProgramName = "",
 }: RequestModalProps) {
   const [submitting, setSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -47,10 +50,6 @@ export function RequestModal({
       }
 
       setSuccess(true);
-      setTimeout(() => {
-        onClose();
-        setSuccess(false);
-      }, 3000);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong.");
     } finally {
@@ -76,6 +75,8 @@ export function RequestModal({
           ? "Program Registration"
           : "Submit an Initiative";
 
+  const nextStep = INVOLVE_CARDS.find((card) => card.icon === type);
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
       <div className="bg-white rounded-lg shadow-xl w-full max-w-md relative overflow-hidden flex flex-col max-h-[90vh]">
@@ -99,8 +100,18 @@ export function RequestModal({
               <div style={{ width: "4rem", height: "4rem", backgroundColor: "#d1fae5", color: "#059669", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 1rem", fontSize: "2rem" }}>
                 ✓
               </div>
-              <p style={{ color: "#065f46", fontWeight: "bold" }} className="content-ar">تم إرسال طلبك بنجاح!</p>
-              <p style={{ color: "#065f46", fontWeight: "bold" }} className="content-en">Request submitted successfully!</p>
+              <p style={{ color: "#065f46", fontWeight: "bold" }} className="content-ar">تم إرسال طلبك بنجاح.</p>
+              <p style={{ color: "#065f46", fontWeight: "bold" }} className="content-en">Your request was sent.</p>
+              {nextStep ? (
+                <>
+                  <p className="content-ar" style={{ color: "#064e3b", marginTop: "0.75rem" }}>{nextStep.nextStep.ar}</p>
+                  <p className="content-en" style={{ color: "#064e3b", marginTop: "0.75rem" }}>{nextStep.nextStep.en}</p>
+                </>
+              ) : null}
+              <button type="button" onClick={onClose} className="btn-primary" style={{ marginTop: "1.25rem" }}>
+                <span className="content-ar">حسناً</span>
+                <span className="content-en">Done</span>
+              </button>
             </div>
           ) : (
             <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
@@ -161,7 +172,7 @@ export function RequestModal({
                 <div>
                   <label style={{ display: "block", fontSize: "0.875rem", marginBottom: "0.25rem", color: "#374151" }} className="content-ar">البرنامج المفضل *</label>
                   <label style={{ display: "block", fontSize: "0.875rem", marginBottom: "0.25rem", color: "#374151" }} className="content-en">Preferred Program *</label>
-                  <input required name="programName" style={{ width: "100%", padding: "0.5rem 0.75rem", border: "1px solid #d1d5db", borderRadius: "0.375rem", boxSizing: "border-box", color: "#000" }} />
+                  <input required name="programName" defaultValue={initialProgramName} style={{ width: "100%", padding: "0.5rem 0.75rem", border: "1px solid #d1d5db", borderRadius: "0.375rem", boxSizing: "border-box", color: "#000" }} />
                 </div>
               )}
 
@@ -178,6 +189,17 @@ export function RequestModal({
                 <label style={{ display: "block", fontSize: "0.875rem", marginBottom: "0.25rem", color: "#374151" }} className="content-en">Additional Message</label>
                 <textarea name="message" rows={2} style={{ width: "100%", padding: "0.5rem 0.75rem", border: "1px solid #d1d5db", borderRadius: "0.375rem", boxSizing: "border-box", color: "#000" }} />
               </div>
+
+              <p className="request-form__privacy">
+                <span className="content-ar">
+                  نستخدم الاسم والهاتف والبريد والمحافظة للرد على هذا الطلب فقط.{" "}
+                  <LocaleLink href="/privacy">سياسة الخصوصية</LocaleLink>
+                </span>
+                <span className="content-en">
+                  We use your name, phone, email, and governorate only to reply to this request.{" "}
+                  <LocaleLink href="/privacy">Privacy policy</LocaleLink>
+                </span>
+              </p>
 
               <button
                 type="submit"

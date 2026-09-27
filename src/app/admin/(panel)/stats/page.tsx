@@ -7,7 +7,10 @@ import { Loader2, Save } from "lucide-react";
 type Stat = {
   id: string;
   labelAr: string;
+  labelEn?: string | null;
   value: string;
+  noteAr?: string | null;
+  noteEn?: string | null;
   icon: string | null;
   isActive: boolean;
 };
@@ -76,6 +79,22 @@ export default function StatsPage() {
                   onChange={(e) =>
                     updateStat(stat.id, "labelAr", e.target.value)
                   }
+                />
+              </div>
+              <div className="admin-field">
+                <label>ماذا يعني الرقم</label>
+                <input
+                  className="admin-field__input admin-field__input--plain"
+                  value={stat.noteAr || ""}
+                  onChange={(e) => updateStat(stat.id, "noteAr", e.target.value)}
+                />
+              </div>
+              <div className="admin-field">
+                <label>What the number means</label>
+                <input
+                  className="admin-field__input admin-field__input--plain"
+                  value={stat.noteEn || ""}
+                  onChange={(e) => updateStat(stat.id, "noteEn", e.target.value)}
                 />
               </div>
               <div className="admin-field">

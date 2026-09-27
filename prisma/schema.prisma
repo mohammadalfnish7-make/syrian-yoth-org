@@ -78,16 +78,47 @@ model News {
 }
 
 model Program {
-  id          String   @id @default(cuid())
-  title       String
-  description String   @db.Text
-  imageUrl    String?  @map("image_url")
-  isActive    Boolean  @default(true) @map("is_active")
-  sortOrder   Int      @default(0) @map("sort_order")
-  createdAt   DateTime @default(now()) @map("created_at")
-  updatedAt   DateTime @updatedAt @map("updated_at")
+  id            String   @id @default(cuid())
+  slug          String?  @unique
+  title         String
+  titleEn       String?  @map("title_en")
+  description   String   @db.Text
+  descriptionEn String?  @map("description_en") @db.Text
+  audienceAr    String?  @map("audience_ar")
+  audienceEn    String?  @map("audience_en")
+  scheduleAr    String?  @map("schedule_ar")
+  scheduleEn    String?  @map("schedule_en")
+  whereAr       String?  @map("where_ar")
+  whereEn       String?  @map("where_en")
+  outcomesAr    String?  @map("outcomes_ar") @db.Text
+  outcomesEn    String?  @map("outcomes_en") @db.Text
+  imageUrl      String?  @map("image_url")
+  isActive      Boolean  @default(true) @map("is_active")
+  sortOrder     Int      @default(0) @map("sort_order")
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
 
   @@map("programs")
+}
+
+model Event {
+  id            String   @id @default(cuid())
+  slug          String   @unique
+  titleAr       String   @map("title_ar")
+  titleEn       String?  @map("title_en")
+  descriptionAr String   @map("description_ar") @db.Text
+  descriptionEn String?  @map("description_en") @db.Text
+  cityAr        String   @map("city_ar")
+  cityEn        String?  @map("city_en")
+  startsAt      DateTime? @map("starts_at")
+  isRolling     Boolean  @default(false) @map("is_rolling")
+  registerPath  String   @default("/get-involved") @map("register_path")
+  isActive      Boolean  @default(true) @map("is_active")
+  sortOrder     Int      @default(0) @map("sort_order")
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  @@map("events")
 }
 
 model FocusArea {
@@ -111,6 +142,8 @@ model ImpactStat {
   labelAr   String   @map("label_ar")
   labelEn   String?  @map("label_en")
   value     String
+  noteAr    String?  @map("note_ar")
+  noteEn    String?  @map("note_en")
   icon      String?
   sortOrder Int      @default(0) @map("sort_order")
   isActive  Boolean  @default(true) @map("is_active")

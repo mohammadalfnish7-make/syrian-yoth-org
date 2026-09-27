@@ -1,6 +1,8 @@
 "use client";
 
 import { useCallback, useState } from "react";
+import { usePathname } from "next/navigation";
+import { withLocale } from "@/lib/locale";
 
 export type Carousel3DSlide = {
   key: string;
@@ -64,8 +66,10 @@ export function Carousel3D({
   readMoreLabelEn = "Read more",
   ariaLabel = "Carousel",
 }: Carousel3DProps) {
+  const pathname = usePathname() || "/ar";
   const [current, setCurrent] = useState(0);
   const total = slides.length;
+  const localize = (href?: string) => (href ? withLocale(href, pathname) : undefined);
 
   const goTo = useCallback(
     (index: number) => {
@@ -129,7 +133,7 @@ export function Carousel3D({
                   aria-current={isCurrent ? "true" : undefined}
                 >
                   {slide.href && isCurrent ? (
-                    <a href={slide.href} className="carousel-3d__link">
+                    <a href={localize(slide.href)} className="carousel-3d__link">
                       {inner}
                     </a>
                   ) : (
@@ -165,10 +169,10 @@ export function Carousel3D({
       </div>
 
       <div className="carousel-3d__footer">
-        <a href={readMoreHref} className="carousel-3d__read-more content-ar">
+        <a href={localize(readMoreHref)} className="carousel-3d__read-more content-ar">
           {readMoreLabelAr}
         </a>
-        <a href={readMoreHref} className="carousel-3d__read-more content-en">
+        <a href={localize(readMoreHref)} className="carousel-3d__read-more content-en">
           {readMoreLabelEn}
         </a>
       </div>

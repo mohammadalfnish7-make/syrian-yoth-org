@@ -49,7 +49,7 @@ function ProgramSlideMedia({ program }: { program: ProgramCard }) {
 export function ProgramsCarousel({ programs }: ProgramsCarouselProps) {
   const slides: Carousel3DSlide[] = programs.map((program) => ({
     key: program.id ?? program.title.en,
-    href: "#involve",
+    href: `/programs/${program.slug}`,
     caption: (
       <>
         <span className="content-ar">{program.title.ar}</span>
@@ -62,7 +62,7 @@ export function ProgramsCarousel({ programs }: ProgramsCarouselProps) {
   return (
     <Carousel3D
       slides={slides}
-      readMoreHref="#involve"
+      readMoreHref="/programs"
       readMoreLabelAr="اقرأ أكثر"
       readMoreLabelEn="Read more"
       ariaLabel="البرامج"

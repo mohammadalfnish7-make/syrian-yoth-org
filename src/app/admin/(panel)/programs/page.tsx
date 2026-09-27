@@ -8,19 +8,43 @@ import { Plus, Loader2, Trash2 } from "lucide-react";
 type Program = {
   id: string;
   title: string;
+  titleEn?: string | null;
   description: string;
+  descriptionEn?: string | null;
+  audienceAr?: string | null;
+  audienceEn?: string | null;
+  scheduleAr?: string | null;
+  scheduleEn?: string | null;
+  whereAr?: string | null;
+  whereEn?: string | null;
+  outcomesAr?: string | null;
+  outcomesEn?: string | null;
+  slug?: string | null;
   imageUrl: string | null;
+};
+
+const EMPTY_FORM = {
+  title: "",
+  titleEn: "",
+  description: "",
+  descriptionEn: "",
+  audienceAr: "",
+  audienceEn: "",
+  scheduleAr: "",
+  scheduleEn: "",
+  whereAr: "",
+  whereEn: "",
+  outcomesAr: "",
+  outcomesEn: "",
+  slug: "",
+  imageUrl: null as string | null,
 };
 
 export default function ProgramsPage() {
   const [programs, setPrograms] = useState<Program[]>([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
-  const [form, setForm] = useState({
-    title: "",
-    description: "",
-    imageUrl: null as string | null,
-  });
+  const [form, setForm] = useState(EMPTY_FORM);
 
   const load = useCallback(async () => {
     const res = await fetch("/api/admin/programs");
@@ -40,7 +64,7 @@ export default function ProgramsPage() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(form),
     });
-    setForm({ title: "", description: "", imageUrl: null });
+    setForm(EMPTY_FORM);
     setShowForm(false);
     load();
   }
@@ -94,6 +118,14 @@ export default function ProgramsPage() {
               />
             </div>
             <div className="admin-field">
+              <label>العنوان بالإنجليزية / English title</label>
+              <input className="admin-field__input admin-field__input--plain" value={form.titleEn} onChange={(e) => setForm({ ...form, titleEn: e.target.value })} />
+            </div>
+            <div className="admin-field">
+              <label>المسار في الرابط (slug)</label>
+              <input className="admin-field__input admin-field__input--plain" value={form.slug} onChange={(e) => setForm({ ...form, slug: e.target.value })} placeholder="qaid" />
+            </div>
+            <div className="admin-field">
               <label>الوصف</label>
               <textarea
                 className="admin-field__input admin-field__input--plain"
@@ -104,6 +136,36 @@ export default function ProgramsPage() {
                 }
                 required
               />
+            </div>
+            <div className="admin-field">
+              <label>لمن البرنامج</label>
+              <input className="admin-field__input admin-field__input--plain" value={form.audienceAr} onChange={(e) => setForm({ ...form, audienceAr: e.target.value })} />
+            </div>
+            <div className="admin-field">
+              <label>Who it is for</label>
+              <input className="admin-field__input admin-field__input--plain" value={form.audienceEn} onChange={(e) => setForm({ ...form, audienceEn: e.target.value })} />
+            </div>
+            <div className="admin-field">
+              <label>أين ومتى</label>
+              <input className="admin-field__input admin-field__input--plain" value={form.whereAr} onChange={(e) => setForm({ ...form, whereAr: e.target.value })} />
+              <input className="admin-field__input admin-field__input--plain" value={form.scheduleAr} onChange={(e) => setForm({ ...form, scheduleAr: e.target.value })} />
+            </div>
+            <div className="admin-field">
+              <label>Where and when</label>
+              <input className="admin-field__input admin-field__input--plain" value={form.whereEn} onChange={(e) => setForm({ ...form, whereEn: e.target.value })} />
+              <input className="admin-field__input admin-field__input--plain" value={form.scheduleEn} onChange={(e) => setForm({ ...form, scheduleEn: e.target.value })} />
+            </div>
+            <div className="admin-field">
+              <label>ماذا يغادر به المشارك</label>
+              <textarea className="admin-field__input admin-field__input--plain" rows={3} value={form.outcomesAr} onChange={(e) => setForm({ ...form, outcomesAr: e.target.value })} />
+            </div>
+            <div className="admin-field">
+              <label>What they leave with</label>
+              <textarea className="admin-field__input admin-field__input--plain" rows={3} value={form.outcomesEn} onChange={(e) => setForm({ ...form, outcomesEn: e.target.value })} />
+            </div>
+            <div className="admin-field">
+              <label>الوصف بالإنجليزية</label>
+              <textarea className="admin-field__input admin-field__input--plain" rows={3} value={form.descriptionEn} onChange={(e) => setForm({ ...form, descriptionEn: e.target.value })} />
             </div>
             <ImageUploader
               category="programs"

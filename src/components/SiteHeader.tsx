@@ -1,21 +1,21 @@
-import Link from "next/link";
+import { LangSwitch } from "@/components/LangSwitch";
+import { LocaleLink } from "@/components/LocaleLink";
 import type { PublicSettings } from "@/types/site";
 
 const NAV_LINKS = [
-  { href: "#about", labelAr: "من نحن", labelEn: "About" },
-  { href: "#board", labelAr: "الإدارة", labelEn: "Leadership" },
-  { href: "#programs", labelAr: "البرامج", labelEn: "Programs" },
-  { href: "#impact", labelAr: "الأثر", labelEn: "Impact" },
-  { href: "#opportunities", labelAr: "الفرص", labelEn: "Opportunities" },
-  { href: "#news", labelAr: "الأخبار", labelEn: "News" },
-  { href: "#contact", labelAr: "تواصل", labelEn: "Contact" },
+  { href: "/about", labelAr: "من نحن", labelEn: "About" },
+  { href: "/programs", labelAr: "البرامج", labelEn: "Programs" },
+  { href: "/events", labelAr: "الفعاليات", labelEn: "Events" },
+  { href: "/impact", labelAr: "الأثر", labelEn: "Impact" },
+  { href: "/news", labelAr: "الأخبار", labelEn: "News" },
+  { href: "/contact", labelAr: "تواصل", labelEn: "Contact" },
 ] as const;
 
 export function SiteHeader({ settings }: { settings?: PublicSettings }) {
   return (
     <header className="site-header">
       <div className="container-yaf header__inner">
-        <Link href="/" className="site-brand">
+        <LocaleLink href="/" className="site-brand">
           {settings?.branding?.logoUrl ? (
             <img src={settings.branding.logoUrl} alt="مؤسسة شباب سوريا" className="h-16 w-auto object-contain" />
           ) : (
@@ -28,7 +28,7 @@ export function SiteHeader({ settings }: { settings?: PublicSettings }) {
               <span className="site-brand__tag content-en">Syria</span>
             </>
           )}
-        </Link>
+        </LocaleLink>
 
         <label htmlFor="nav-open" id="nav-open-label" className="nav-toggle-btn">
           <span className="visually-hidden">Toggle menu</span>
@@ -41,31 +41,24 @@ export function SiteHeader({ settings }: { settings?: PublicSettings }) {
           <ul className="nav__list">
             {NAV_LINKS.map((link) => (
               <li key={link.href}>
-                <a href={link.href} className="nav__link content-ar">
+                <LocaleLink href={link.href} className="nav__link content-ar">
                   {link.labelAr}
-                </a>
-                <a href={link.href} className="nav__link content-en">
+                </LocaleLink>
+                <LocaleLink href={link.href} className="nav__link content-en">
                   {link.labelEn}
-                </a>
+                </LocaleLink>
               </li>
             ))}
           </ul>
 
           <div className="nav__actions">
-            <div className="lang-switch">
-              <label htmlFor="lang-ar" id="lang-ar-label" className="lang-switch__btn">
-                AR
-              </label>
-              <label htmlFor="lang-en" id="lang-en-label" className="lang-switch__btn">
-                EN
-              </label>
-            </div>
-            <a href="#involve" className="btn-primary btn-primary--compact content-ar">
+            <LangSwitch />
+            <LocaleLink href="/get-involved" className="btn-primary btn-primary--compact content-ar">
               انضم إلينا
-            </a>
-            <a href="#involve" className="btn-primary btn-primary--compact content-en">
+            </LocaleLink>
+            <LocaleLink href="/get-involved" className="btn-primary btn-primary--compact content-en">
               Join Us
-            </a>
+            </LocaleLink>
           </div>
         </nav>
       </div>

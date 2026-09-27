@@ -37,6 +37,31 @@ const nextConfig: NextConfig = {
   images: {
     remotePatterns: [],
   },
+  async redirects() {
+    const pages = [
+      "/about",
+      "/programs",
+      "/programs/:slug",
+      "/news",
+      "/news/:id",
+      "/events",
+      "/impact",
+      "/get-involved",
+      "/contact",
+      "/privacy",
+      "/safeguarding",
+      "/accessibility",
+    ];
+
+    return [
+      { source: "/", destination: "/ar", permanent: false },
+      ...pages.map((source) => ({
+        source,
+        destination: `/ar${source}`,
+        permanent: false,
+      })),
+    ];
+  },
   async headers() {
     return [{ source: "/:path*", headers: securityHeaders }];
   },

@@ -2,6 +2,7 @@
 
 import { useMemo, useRef, useState, useEffect, useCallback } from "react";
 import Image from "next/image";
+import { LocaleLink } from "@/components/LocaleLink";
 import { ChevronRight, ChevronLeft } from "lucide-react";
 import { useDragScroll } from "@/hooks/useDragScroll";
 import {
@@ -429,6 +430,12 @@ export function GovernorateNewsSection({
                       {(item.bodyEn || item.body).slice(0, 220)}
                       {(item.bodyEn || item.body).length > 220 ? "…" : ""}
                     </p>
+                    <LocaleLink href={`/news/${item.id}`} className="news-slide__more content-ar">
+                      اقرأ الخبر
+                    </LocaleLink>
+                    <LocaleLink href={`/news/${item.id}`} className="news-slide__more content-en">
+                      Read the story
+                    </LocaleLink>
                   </div>
                 </article>
               ))}

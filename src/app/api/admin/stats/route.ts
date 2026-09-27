@@ -27,15 +27,24 @@ export async function PUT(request: NextRequest) {
         where: { id: stat.id },
         data: {
           labelAr: stat.labelAr,
+          labelEn: stat.labelEn ?? null,
           value: stat.value,
+          noteAr: stat.noteAr ?? null,
+          noteEn: stat.noteEn ?? null,
           icon: stat.icon || null,
           isActive: stat.isActive ?? true,
         },
       });
     }
 
-    const { revalidatePath } = await import("next/cache");
-    revalidatePath("/", "layout");
+    try {
+      const { revalidatePath } = await import("next/cache");
+      revalidatePath("/", "layout");
+      revalidatePath("/ar", "layout");
+      revalidatePath("/en", "layout");
+    } catch {
+      // Cache revalidation is unavailable outside a Next.js request store.
+    }
 
     return apiSuccess({ message: "تم حفظ الإحصائيات." });
   } catch {

@@ -65,8 +65,14 @@ export async function PUT(request: NextRequest) {
       },
     });
 
-    const { revalidatePath } = await import("next/cache");
-    revalidatePath("/", "layout");
+    try {
+      const { revalidatePath } = await import("next/cache");
+      revalidatePath("/", "layout");
+      revalidatePath("/ar", "layout");
+      revalidatePath("/en", "layout");
+    } catch {
+      // Cache revalidation is unavailable outside a Next.js request store.
+    }
 
     return apiSuccess({ message: "تم حفظ الإعدادات." });
   } catch {

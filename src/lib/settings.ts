@@ -1,4 +1,5 @@
 import { normalizeAboutSettings } from "@/lib/normalize-about";
+import { PROFILE_MISSION, PROFILE_VISION } from "@/lib/profile-content";
 import { prisma } from "@/lib/prisma";
 import type {
   BrandingSettings,
@@ -29,14 +30,8 @@ const DEFAULT_SETTINGS: PublicSettings = {
     imageUrl: "/images/hero/ramadan-session.webp",
   },
   about: {
-    mission: {
-      ar: "تمكين الشباب السوري من تحويل طاقتهم اللامنة إلى أثر حقيقي في مجتمعهم ووطنهم.",
-      en: "Empowering Syrian youth to transform their latent energy into real impact in their communities and nation.",
-    },
-    vision: {
-      ar: "أن نكون المؤسسة الشبابية الرائدة في سوريا، نصنع جيلاً يحوّل طاقته إلى أثر، ووعيه إلى فعل، وانتماءه إلى بناء.",
-      en: "To be Syria's leading youth foundation — shaping a generation that turns energy into impact, awareness into action, and belonging into building.",
-    },
+    mission: PROFILE_MISSION,
+    vision: PROFILE_VISION,
     values: [
       { ar: "الكرامة", en: "Dignity" },
       { ar: "المسؤولية", en: "Responsibility" },
@@ -46,7 +41,7 @@ const DEFAULT_SETTINGS: PublicSettings = {
       { ar: "الانتماء", en: "Belonging" },
       { ar: "التكافل", en: "Solidarity" },
     ],
-    yearsOfExperience: "+15",
+    yearsOfExperience: "10",
   },
   branding: {
     logoUrl: "/images/logo.png",
@@ -96,6 +91,22 @@ export async function getPublicSettings(): Promise<PublicSettings> {
           };
           break;
       }
+    }
+
+    if (
+      merged.about.mission.ar ===
+      "تمكين الشباب السوري من تحويل طاقتهم اللامنة إلى أثر حقيقي في مجتمعهم ووطنهم."
+    ) {
+      merged.about.mission = { ...PROFILE_MISSION };
+    }
+    if (
+      merged.about.vision.en ===
+      "To be Syria's leading youth foundation — shaping a generation that turns energy into impact, awareness into action, and belonging into building."
+    ) {
+      merged.about.vision = { ...PROFILE_VISION };
+    }
+    if (!merged.about.yearsOfExperience || merged.about.yearsOfExperience === "+15") {
+      merged.about.yearsOfExperience = "10";
     }
 
     return merged;

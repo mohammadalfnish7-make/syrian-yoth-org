@@ -1,8 +1,23 @@
 import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { requireAuth, apiSuccess } from "@/lib/api-utils";
+import { requireAuth, apiError, apiSuccess } from "@/lib/api-utils";
+import { programData } from "@/lib/program-input";
 
 type RouteParams = { params: Promise<{ id: string }> };
+
+export async function PATCH(request: NextRequest, { params }: RouteParams) {
+  const auth = await requireAuth(request, { permission: "manage_programs" });
+  if (!auth.success) return auth.response;
+
+  const { id } = await params;
+  const data = programData(await request.json());
+  if (!data.title || !data.description) {
+    return apiError("العنوان والوصف مطلوبان.");
+  }
+
+  const program = await prisma.program.update({ where: { id }, data });
+  return apiSuccess(program);
+}
 
 export async function DELETE(_request: NextRequest, { params }: RouteParams) {
   const auth = await requireAuth(_request, { permission: "manage_programs" });

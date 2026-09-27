@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { CloseNavOnScroll } from "@/components/CloseNavOnScroll";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { getPublicSettings } from "@/lib/settings";
@@ -47,6 +48,7 @@ export default async function SiteLayout({
         aria-labelledby="nav-open-label"
       />
 
+      <CloseNavOnScroll />
       <div className="site">
         <SiteHeader settings={settings} />
         {children}

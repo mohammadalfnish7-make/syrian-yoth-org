@@ -1,6 +1,7 @@
 import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireAuth, apiError, apiSuccess } from "@/lib/api-utils";
+import { programData } from "@/lib/program-input";
 
 export async function GET(request: NextRequest) {
   const auth = await requireAuth(request, { permission: "manage_programs" });
@@ -18,14 +19,12 @@ export async function POST(request: NextRequest) {
   if (!auth.success) return auth.response;
 
   try {
-    const { title, description, imageUrl } = await request.json();
-    if (!title || !description) {
+    const data = programData(await request.json());
+    if (!data.title || !data.description) {
       return apiError("العنوان والوصف مطلوبان.");
     }
 
-    const program = await prisma.program.create({
-      data: { title, description, imageUrl: imageUrl || null },
-    });
+    const program = await prisma.program.create({ data });
 
     return apiSuccess(program, 201);
   } catch {

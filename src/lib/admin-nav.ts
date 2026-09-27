@@ -9,6 +9,7 @@ import {
   Layers,
   Users,
   Newspaper,
+  CalendarDays,
   Inbox,
   UserCircle2,
 } from "lucide-react";
@@ -94,6 +95,15 @@ export const adminNavItems: AdminNavItem[] = [
     roles: ["SUPER_ADMIN"],
     descriptionAr: "حسابات أدمن المحافظات",
     descriptionEn: "Governorate admin accounts",
+  },
+  {
+    href: "/admin/events",
+    labelAr: "الفعاليات",
+    labelEn: "Events",
+    icon: CalendarDays,
+    roles: ["SUPER_ADMIN"],
+    descriptionAr: "التاريخ والمدينة والتسجيل",
+    descriptionEn: "Date, city, and registration",
   },
   {
     href: "/admin/news",
