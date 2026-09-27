@@ -21,7 +21,7 @@ export function BoardMembersSection({ members }: BoardMembersSectionProps) {
   return (
     <div className="board-members-grid">
       {members.map((member) => (
-        <article key={member.id} className="board-member-card">
+        <article key={member.id} className="board-member-card" tabIndex={0}>
           <div className="board-member-card__frame">
             <span className="board-member-card__accent" aria-hidden="true" />
             <div className="board-member-card__media">
@@ -31,7 +31,7 @@ export function BoardMembersSection({ members }: BoardMembersSectionProps) {
                   alt={member.nameAr}
                   fill
                   className="board-member-card__image"
-                  sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                  sizes="(max-width: 519px) 100vw, (max-width: 799px) 50vw, (max-width: 1099px) 33vw, 25vw"
                   unoptimized={
                     member.imageUrl.startsWith("/api/uploads/") ||
                     member.imageUrl.startsWith("/images/managers/")
@@ -54,12 +54,12 @@ export function BoardMembersSection({ members }: BoardMembersSectionProps) {
                 </p>
                 {member.bioAr ? (
                   <p className="board-member-card__bio content-ar" dir="rtl">
-                    {member.bioAr}
+                    <span>{member.bioAr}</span>
                   </p>
                 ) : null}
                 {member.bioEn || member.bioAr ? (
                   <p className="board-member-card__bio content-en" dir="ltr">
-                    {member.bioEn || member.bioAr}
+                    <span>{member.bioEn || member.bioAr}</span>
                   </p>
                 ) : null}
               </div>
