@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { AdminPageHeader } from "@/components/admin/AdminShell";
+import { AdminFormDialog } from "@/components/admin/AdminFormDialog";
 import { ImageUploader } from "@/components/admin/ImageUploader";
 import { Plus, Loader2, Trash2, Pencil } from "lucide-react";
 
@@ -140,11 +141,12 @@ export default function BoardMembersPage() {
         </button>
       </div>
 
-      {showForm && (
-        <form onSubmit={handleSubmit} className="admin-card admin-form-inline">
-          <h3 className="admin-card__title">
-            {editingId ? "تعديل عضو الإدارة" : "عضو إدارة جديد"}
-          </h3>
+      <AdminFormDialog
+        open={showForm}
+        title={editingId ? "تعديل عضو الإدارة" : "عضو إدارة جديد"}
+        onClose={closeForm}
+      >
+        <form onSubmit={handleSubmit}>
           <div className="admin-form-grid">
             <div className="admin-field">
               <label>الاسم (عربي)</label>
@@ -246,7 +248,7 @@ export default function BoardMembersPage() {
             </button>
           </div>
         </form>
-      )}
+      </AdminFormDialog>
 
       <div className="admin-board-grid">
         {members.length === 0 ? (

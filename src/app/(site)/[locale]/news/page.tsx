@@ -20,6 +20,10 @@ export async function generateMetadata({
   });
 }
 
+function leadParagraph(text: string) {
+  return text.split(/\n{2,}/).map((part) => part.trim()).find(Boolean) ?? "";
+}
+
 export default async function NewsPage() {
   const news = await getPublishedNews();
 
@@ -34,34 +38,42 @@ export default async function NewsPage() {
         ledeEn="Every story has its own link, so a governorate branch can share it as published."
       />
       <section className="section">
-        <div className="container-yaf program-list">
+        <div className="container-yaf news-list">
           {news.length === 0 ? (
             <>
               <p className="content-ar">لا توجد أخبار منشورة بعد.</p>
               <p className="content-en">No published stories yet.</p>
             </>
           ) : (
-            news.map((item) => (
-              <article key={item.id} className="program-card-row">
-                <p className="event-card__meta">
-                  <span className="content-ar">{item.governorateNameAr}</span>
-                  <span className="content-en">{item.governorateNameEn}</span>
-                </p>
-                <h2>
-                  <LocaleLink href={`/news/${item.id}`} className="content-ar">
-                    {item.title}
-                  </LocaleLink>
-                  <LocaleLink href={`/news/${item.id}`} className="content-en">
-                    {item.titleEn || item.title}
-                  </LocaleLink>
-                </h2>
-                <p className="content-ar">{item.body.slice(0, 220)}{item.body.length > 220 ? "…" : ""}</p>
-                <p className="content-en">
-                  {(item.bodyEn || item.body).slice(0, 220)}
-                  {(item.bodyEn || item.body).length > 220 ? "…" : ""}
-                </p>
-              </article>
-            ))
+            news.map((item) => {
+              const leadAr = leadParagraph(item.body);
+              const leadEn = leadParagraph(item.bodyEn || item.body);
+              return (
+                <article key={item.id} className="news-story">
+                  {item.coverImageUrl ? (
+                    <LocaleLink href={`/news/${item.id}`} className="news-story__media">
+                      <img src={item.coverImageUrl} alt="" />
+                    </LocaleLink>
+                  ) : null}
+                  <div className="news-story__copy">
+                    <p className="event-card__meta">
+                      <span className="content-ar">{item.governorateNameAr}</span>
+                      <span className="content-en">{item.governorateNameEn}</span>
+                    </p>
+                    <h2>
+                      <LocaleLink href={`/news/${item.id}`} className="content-ar">
+                        {item.title}
+                      </LocaleLink>
+                      <LocaleLink href={`/news/${item.id}`} className="content-en">
+                        {item.titleEn || item.title}
+                      </LocaleLink>
+                    </h2>
+                    <p className="news-story__lead content-ar">{leadAr}</p>
+                    <p className="news-story__lead content-en">{leadEn}</p>
+                  </div>
+                </article>
+              );
+            })
           )}
         </div>
       </section>

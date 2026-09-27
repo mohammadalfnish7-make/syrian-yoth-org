@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { AdminPageHeader } from "@/components/admin/AdminShell";
+import { AdminFormDialog } from "@/components/admin/AdminFormDialog";
 import { ImageUploader } from "@/components/admin/ImageUploader";
 import { Plus, Loader2, Trash2, Pencil } from "lucide-react";
 
@@ -113,6 +114,13 @@ export default function ProgramsPage() {
     load();
   }
 
+  function closeForm() {
+    setShowForm(false);
+    setEditingId(null);
+    setForm(EMPTY_FORM);
+    setMessage("");
+  }
+
   async function handleDelete(id: string) {
     if (!confirm("حذف هذا البرنامج؟")) return;
     await fetch(`/api/admin/programs/${id}`, { method: "DELETE" });
@@ -148,9 +156,12 @@ export default function ProgramsPage() {
         </button>
       </div>
 
-      {showForm && (
-        <form onSubmit={handleSave} className="admin-card admin-form-inline">
-          <h3 className="admin-card__title">{editingId ? "تعديل البرنامج" : "برنامج جديد"}</h3>
+      <AdminFormDialog
+        open={showForm}
+        title={editingId ? "تعديل البرنامج" : "برنامج جديد"}
+        onClose={closeForm}
+      >
+        <form onSubmit={handleSave}>
           <div className="admin-form-stack">
             <div className="admin-field">
               <label>العنوان</label>
@@ -225,20 +236,12 @@ export default function ProgramsPage() {
               {saving ? <Loader2 size={18} className="animate-spin" /> : null}
               {editingId ? "حفظ التعديل" : "إضافة"}
             </button>
-            <button
-              type="button"
-              className="admin-btn-ghost"
-              onClick={() => {
-                setShowForm(false);
-                setEditingId(null);
-                setForm(EMPTY_FORM);
-              }}
-            >
+            <button type="button" className="admin-btn-ghost" onClick={closeForm}>
               إلغاء
             </button>
           </div>
         </form>
-      )}
+      </AdminFormDialog>
 
       <div className="admin-programs-grid">
         {programs.length === 0 ? (
