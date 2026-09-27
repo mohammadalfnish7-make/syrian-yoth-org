@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { AdminPageHeader } from "@/components/admin/AdminShell";
 import { ImageUploader } from "@/components/admin/ImageUploader";
-import { Plus, Loader2, Trash2 } from "lucide-react";
+import { Plus, Loader2, Trash2, Pencil } from "lucide-react";
 
 type Program = {
   id: string;
@@ -44,6 +44,9 @@ export default function ProgramsPage() {
   const [programs, setPrograms] = useState<Program[]>([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [saving, setSaving] = useState(false);
+  const [message, setMessage] = useState("");
   const [form, setForm] = useState(EMPTY_FORM);
 
   const load = useCallback(async () => {
@@ -57,14 +60,55 @@ export default function ProgramsPage() {
     load();
   }, [load]);
 
-  async function handleCreate(e: React.FormEvent) {
-    e.preventDefault();
-    await fetch("/api/admin/programs", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(form),
-    });
+  function startCreate() {
+    setEditingId(null);
     setForm(EMPTY_FORM);
+    setMessage("");
+    setShowForm(true);
+  }
+
+  function startEdit(program: Program) {
+    setEditingId(program.id);
+    setForm({
+      title: program.title,
+      titleEn: program.titleEn || "",
+      description: program.description,
+      descriptionEn: program.descriptionEn || "",
+      audienceAr: program.audienceAr || "",
+      audienceEn: program.audienceEn || "",
+      scheduleAr: program.scheduleAr || "",
+      scheduleEn: program.scheduleEn || "",
+      whereAr: program.whereAr || "",
+      whereEn: program.whereEn || "",
+      outcomesAr: program.outcomesAr || "",
+      outcomesEn: program.outcomesEn || "",
+      slug: program.slug || "",
+      imageUrl: program.imageUrl,
+    });
+    setMessage("");
+    setShowForm(true);
+  }
+
+  async function handleSave(e: React.FormEvent) {
+    e.preventDefault();
+    setSaving(true);
+    setMessage("");
+    const res = await fetch(
+      editingId ? `/api/admin/programs/${editingId}` : "/api/admin/programs",
+      {
+        method: editingId ? "PATCH" : "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      }
+    );
+    const data = await res.json().catch(() => ({}));
+    setSaving(false);
+    if (!res.ok) {
+      setMessage(data.error || "فشل الحفظ");
+      return;
+    }
+    setForm(EMPTY_FORM);
+    setEditingId(null);
     setShowForm(false);
     load();
   }
@@ -97,7 +141,7 @@ export default function ProgramsPage() {
         <button
           type="button"
           className="admin-btn-primary"
-          onClick={() => setShowForm(!showForm)}
+          onClick={() => (showForm && !editingId ? setShowForm(false) : startCreate())}
         >
           <Plus size={18} />
           برنامج جديد
@@ -105,8 +149,8 @@ export default function ProgramsPage() {
       </div>
 
       {showForm && (
-        <form onSubmit={handleCreate} className="admin-card admin-form-inline">
-          <h3 className="admin-card__title">برنامج جديد</h3>
+        <form onSubmit={handleSave} className="admin-card admin-form-inline">
+          <h3 className="admin-card__title">{editingId ? "تعديل البرنامج" : "برنامج جديد"}</h3>
           <div className="admin-form-stack">
             <div className="admin-field">
               <label>العنوان</label>
@@ -175,14 +219,20 @@ export default function ProgramsPage() {
               onRemove={() => setForm({ ...form, imageUrl: null })}
             />
           </div>
+          {message && <div className="admin-alert admin-alert--error">{message}</div>}
           <div className="admin-form-actions">
-            <button type="submit" className="admin-btn-primary">
-              إضافة
+            <button type="submit" className="admin-btn-primary" disabled={saving}>
+              {saving ? <Loader2 size={18} className="animate-spin" /> : null}
+              {editingId ? "حفظ التعديل" : "إضافة"}
             </button>
             <button
               type="button"
               className="admin-btn-ghost"
-              onClick={() => setShowForm(false)}
+              onClick={() => {
+                setShowForm(false);
+                setEditingId(null);
+                setForm(EMPTY_FORM);
+              }}
             >
               إلغاء
             </button>
@@ -202,13 +252,24 @@ export default function ProgramsPage() {
                 <h3>{p.title}</h3>
                 <p>{p.description}</p>
               </div>
-              <button
-                type="button"
-                className="admin-btn-icon admin-btn-icon--danger"
-                onClick={() => handleDelete(p.id)}
-              >
-                <Trash2 size={16} />
-              </button>
+              <div className="admin-program-card__actions">
+                <button
+                  type="button"
+                  className="admin-btn-icon"
+                  aria-label="تعديل"
+                  onClick={() => startEdit(p)}
+                >
+                  <Pencil size={16} />
+                </button>
+                <button
+                  type="button"
+                  className="admin-btn-icon admin-btn-icon--danger"
+                  aria-label="حذف"
+                  onClick={() => handleDelete(p.id)}
+                >
+                  <Trash2 size={16} />
+                </button>
+              </div>
             </div>
           ))
         )}

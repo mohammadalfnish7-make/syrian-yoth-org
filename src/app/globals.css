@@ -1576,6 +1576,16 @@ h4 { font-size: var(--font-size-h4); }
   border-radius: 0.875rem;
 }
 
+.admin-program-card__body {
+  flex: 1;
+  min-width: 0;
+}
+
+.admin-program-card__actions {
+  display: flex;
+  gap: 0.35rem;
+}
+
 .admin-program-card__body h3 {
   font-size: 0.95rem;
   font-weight: 700;

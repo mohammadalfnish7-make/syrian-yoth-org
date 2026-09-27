@@ -15,8 +15,12 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
     return apiError("العنوان والوصف مطلوبان.");
   }
 
-  const program = await prisma.program.update({ where: { id }, data });
-  return apiSuccess(program);
+  try {
+    const program = await prisma.program.update({ where: { id }, data });
+    return apiSuccess(program);
+  } catch {
+    return apiError("تعذر حفظ البرنامج. تأكد أن مسار الرابط غير مستخدم.", 500);
+  }
 }
 
 export async function DELETE(_request: NextRequest, { params }: RouteParams) {
