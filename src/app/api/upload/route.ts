@@ -10,18 +10,10 @@ import {
   deleteImage,
   extractFilenameFromUrl,
   extractCategoryFromUrl,
+  isUploadCategory,
   type UploadCategory,
 } from "@/lib/upload";
 import { getUploadCategoryPermission, hasPermission } from "@/lib/rbac";
-
-const VALID_CATEGORIES: UploadCategory[] = [
-  "news",
-  "partners",
-  "programs",
-  "site",
-  "logos",
-  "managers",
-];
 
 function canUploadCategory(
   role: Parameters<typeof hasPermission>[0],
@@ -43,16 +35,15 @@ export async function POST(request: NextRequest) {
       return apiError("لم يتم إرفاق ملف.");
     }
 
-    if (!category || !VALID_CATEGORIES.includes(category as UploadCategory)) {
+    if (!category || !isUploadCategory(category)) {
       return apiError("فئة الرفع غير صالحة.");
     }
 
-    const uploadCategory = category as UploadCategory;
-    if (!canUploadCategory(auth.session.role, uploadCategory)) {
+    if (!canUploadCategory(auth.session.role, category)) {
       return apiError("ليس لديك صلاحية لهذا الإجراء.", 403);
     }
 
-    const result = await processAndSaveImage(file, uploadCategory);
+    const result = await processAndSaveImage(file, category);
 
     return apiSuccess({
       url: result.url,

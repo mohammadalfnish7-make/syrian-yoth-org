@@ -1,16 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { readFile } from "fs/promises";
-import type { UploadCategory } from "@/lib/upload";
-import { resolveUploadPath } from "@/lib/upload";
-
-const VALID_CATEGORIES: UploadCategory[] = [
-  "news",
-  "partners",
-  "programs",
-  "site",
-  "logos",
-  "managers",
-];
+import { isUploadCategory, resolveUploadPath } from "@/lib/upload";
 
 export async function GET(
   _request: NextRequest,
@@ -24,12 +14,12 @@ export async function GET(
 
   const [category, filename] = segments;
 
-  if (!VALID_CATEGORIES.includes(category as UploadCategory)) {
+  if (!isUploadCategory(category)) {
     return NextResponse.json({ error: "Not found" }, { status: 404 });
   }
 
   try {
-    const filePath = resolveUploadPath(category as UploadCategory, filename);
+    const filePath = resolveUploadPath(category, filename);
     const file = await readFile(filePath);
     return new NextResponse(new Uint8Array(file), {
       headers: {

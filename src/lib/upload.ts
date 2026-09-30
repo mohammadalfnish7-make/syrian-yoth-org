@@ -30,6 +30,12 @@ const CATEGORY_CONFIG: Record<
   managers: { maxSizeMB: 3, maxWidth: 800, quality: 88 },
 };
 
+export const UPLOAD_CATEGORIES = Object.keys(CATEGORY_CONFIG) as UploadCategory[];
+
+export function isUploadCategory(value: string): value is UploadCategory {
+  return (UPLOAD_CATEGORIES as string[]).includes(value);
+}
+
 function getUploadDir(): string {
   return process.env.UPLOAD_DIR || path.join(process.cwd(), "uploads");
 }
