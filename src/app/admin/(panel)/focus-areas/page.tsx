@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { AdminPageHeader } from "@/components/admin/AdminShell";
+import { AdminFormDialog } from "@/components/admin/AdminFormDialog";
 import { ImageUploader } from "@/components/admin/ImageUploader";
 import { FOCUS_AREA_ICONS } from "@/lib/focus-areas";
 import { Plus, Loader2, Trash2, Pencil, Save } from "lucide-react";
@@ -271,11 +272,12 @@ export default function FocusAreasPage() {
         </button>
       </div>
 
-      {showForm && (
-        <form onSubmit={handleSubmit} className="admin-card admin-form-inline">
-          <h3 className="admin-card__title">
-            {editingId ? "تعديل المحور" : "محور جديد"}
-          </h3>
+      <AdminFormDialog
+        open={showForm}
+        title={editingId ? "تعديل المحور" : "محور جديد"}
+        onClose={closeForm}
+      >
+        <form onSubmit={handleSubmit}>
           <div className="admin-form-stack">
             <div className="admin-form-grid">
               <div className="admin-field">
@@ -375,7 +377,7 @@ export default function FocusAreasPage() {
             </button>
           </div>
         </form>
-      )}
+      </AdminFormDialog>
 
       <div className="admin-programs-grid">
         {areas.length === 0 ? (
