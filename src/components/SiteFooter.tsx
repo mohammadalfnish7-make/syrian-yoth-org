@@ -35,8 +35,6 @@ export function SiteFooter({ settings }: SiteFooterProps) {
               <span className="site-brand__name content-en">
                 Syrian Youth Foundation
               </span>
-              <span className="site-brand__tag content-ar">سوريا</span>
-              <span className="site-brand__tag content-en">Syria</span>
             </div>
             <p className="footer__desc content-ar">
               مؤسسة مجتمع مدني سورية مستقلة، تُعنى ببناء اليافعين والشباب في أبعادهم كافة.

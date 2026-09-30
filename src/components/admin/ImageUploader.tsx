@@ -7,6 +7,7 @@ type UploadCategory =
   | "news"
   | "partners"
   | "programs"
+  | "events"
   | "focus-areas"
   | "site"
   | "logos"

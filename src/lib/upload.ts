@@ -7,6 +7,7 @@ export type UploadCategory =
   | "news"
   | "partners"
   | "programs"
+  | "events"
   | "focus-areas"
   | "site"
   | "logos"
@@ -24,6 +25,7 @@ const CATEGORY_CONFIG: Record<
   news: { maxSizeMB: 5, maxWidth: 1920, quality: 82 },
   partners: { maxSizeMB: 2, maxWidth: 800, quality: 90 },
   programs: { maxSizeMB: 5, maxWidth: 1920, quality: 82 },
+  events: { maxSizeMB: 5, maxWidth: 1920, quality: 82 },
   "focus-areas": { maxSizeMB: 5, maxWidth: 1920, quality: 82 },
   site: { maxSizeMB: 5, maxWidth: 1920, quality: 82 },
   logos: { maxSizeMB: 2, maxWidth: 512, quality: 95 },

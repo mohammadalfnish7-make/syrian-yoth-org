@@ -229,6 +229,7 @@ async function main() {
         cityEn: event.cityEn,
         isRolling: event.isRolling,
         registerPath: event.registerPath,
+        imageUrl: event.imageUrl,
       },
     });
   }

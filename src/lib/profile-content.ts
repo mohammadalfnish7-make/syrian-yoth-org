@@ -324,6 +324,7 @@ export const FALLBACK_EVENTS = [
     startsAt: null as string | null,
     isRolling: true,
     registerPath: "/get-involved?program=محطات#program",
+    imageUrl: "/images/hero/ramadan-session.webp",
   },
   {
     id: "event-adolescents",
@@ -337,6 +338,7 @@ export const FALLBACK_EVENTS = [
     startsAt: null as string | null,
     isRolling: true,
     registerPath: "/get-involved?program=نادي اليافعين#program",
+    imageUrl: "/images/hero/homs-youth.webp",
   },
   {
     id: "event-academic",
@@ -350,5 +352,6 @@ export const FALLBACK_EVENTS = [
     startsAt: null as string | null,
     isRolling: true,
     registerPath: "/get-involved?program=وجهتك الأكاديمية#program",
+    imageUrl: "/videos/hero-poster.jpg",
   },
 ];

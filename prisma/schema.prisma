@@ -113,6 +113,7 @@ model Event {
   startsAt      DateTime? @map("starts_at")
   isRolling     Boolean  @default(false) @map("is_rolling")
   registerPath  String   @default("/get-involved") @map("register_path")
+  imageUrl      String?  @map("image_url")
   isActive      Boolean  @default(true) @map("is_active")
   sortOrder     Int      @default(0) @map("sort_order")
   createdAt     DateTime @default(now()) @map("created_at")

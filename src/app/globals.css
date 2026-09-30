@@ -2554,9 +2554,10 @@ body:has(#lang-en:checked) .site {
 .carousel-3d__media {
   position: relative;
   flex: 1;
-  min-height: 0;
+  min-height: 180px;
   overflow: hidden;
   background: var(--color-brand-grey-1);
+  transform: translateZ(0);
 }
 
 .carousel-3d__image {
@@ -3150,6 +3151,11 @@ body:has(#lang-en:checked) .gov-news__track {
   padding: 3rem 0 1.5rem;
 }
 
+.site-footer .site-brand {
+  align-items: flex-start;
+  color: var(--color-brand-white);
+}
+
 .footer__grid {
   display: grid;
   gap: 2rem;
@@ -3333,6 +3339,10 @@ body:has(#lang-en:checked) .gov-news__track {
   margin-bottom: 0.35rem;
 }
 
+.events-showcase {
+  margin-bottom: 2.5rem;
+}
+
 .program-list,
 .event-list,
 .detail-grid {
@@ -3346,6 +3356,16 @@ body:has(#lang-en:checked) .gov-news__track {
   border-radius: 1rem;
   padding: 1.25rem 1.5rem;
   box-shadow: var(--shadow-card);
+  overflow: hidden;
+}
+
+.event-card__image {
+  display: block;
+  width: calc(100% + 3rem);
+  max-width: none;
+  height: 180px;
+  margin: -1.25rem -1.5rem 1rem;
+  object-fit: cover;
 }
 
 .event-card__meta,

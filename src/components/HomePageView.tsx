@@ -9,7 +9,7 @@ import { HeroVideoBackground } from "@/components/HeroVideoBackground";
 import { AnimatedStatValue } from "@/components/AnimatedStatValue";
 import { InvolveSectionClient } from "@/components/InvolveSectionClient";
 import { LocaleLink } from "@/components/LocaleLink";
-import { EventsList } from "@/components/EventsList";
+import { EventsCarousel } from "@/components/EventsCarousel";
 import { PROFILE_SLOGAN } from "@/lib/profile-content";
 import {
   getBoardMembers,
@@ -230,15 +230,7 @@ export default async function HomePageView() {
             <h2 className="section-title content-ar">ما الذي يجري الآن</h2>
             <h2 className="section-title content-en">What is happening now</h2>
           </div>
-          <EventsList events={events.slice(0, 3)} />
-          <p className="section-cta">
-            <LocaleLink href="/events" className="text-link content-ar">
-              كل الفعاليات
-            </LocaleLink>
-            <LocaleLink href="/events" className="text-link content-en">
-              All events
-            </LocaleLink>
-          </p>
+          <EventsCarousel events={events} />
         </div>
       </section>
 

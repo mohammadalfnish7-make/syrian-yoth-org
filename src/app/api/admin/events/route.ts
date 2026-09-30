@@ -24,6 +24,7 @@ function eventData(body: Record<string, unknown>) {
     startsAt: startsAt ? new Date(startsAt) : null,
     isRolling: Boolean(body.isRolling),
     registerPath: text(body.registerPath) ?? "/get-involved",
+    imageUrl: text(body.imageUrl),
     isActive: body.isActive !== false,
   };
 }

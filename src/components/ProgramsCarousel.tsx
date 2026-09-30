@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import type { ProgramCard } from "@/lib/site-content";
 import { ProgramCardIcon } from "@/components/ProgramCardIcon";
 import { Carousel3D, type Carousel3DSlide } from "@/components/Carousel3D";
@@ -11,27 +10,11 @@ type ProgramsCarouselProps = {
 
 function ProgramSlideMedia({ program }: { program: ProgramCard }) {
   if (program.imageUrl) {
-    const isRemote =
-      program.imageUrl.startsWith("http") || program.imageUrl.startsWith("/api/uploads/");
-
-    if (isRemote) {
-      return (
-        <img
-          src={program.imageUrl}
-          alt=""
-          className="carousel-3d__image"
-          loading="lazy"
-        />
-      );
-    }
-
     return (
-      <Image
+      <img
         src={program.imageUrl}
         alt=""
-        fill
         className="carousel-3d__image"
-        sizes="(max-width: 640px) 88vw, 400px"
       />
     );
   }

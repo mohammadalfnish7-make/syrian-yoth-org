@@ -1,4 +1,5 @@
 import { LocaleLink } from "@/components/LocaleLink";
+import { eventImageUrl } from "@/lib/event-images";
 import type { PublicEvent } from "@/lib/public-content";
 
 function formatEventDate(value: string | null, locale: "ar" | "en") {
@@ -13,8 +14,13 @@ function formatEventDate(value: string | null, locale: "ar" | "en") {
 export function EventsList({ events }: { events: PublicEvent[] }) {
   return (
     <div className="event-list">
-      {events.map((event) => (
+      {events.map((event, index) => (
         <article key={event.id} className="event-card">
+          <img
+            src={eventImageUrl(event.imageUrl, index)}
+            alt=""
+            className="event-card__image"
+          />
           <p className="event-card__meta">
             <span className="content-ar">{event.isRolling ? "مستمر" : formatEventDate(event.startsAt, "ar")}</span>
             <span className="content-en">{event.isRolling ? "Ongoing" : formatEventDate(event.startsAt, "en")}</span>

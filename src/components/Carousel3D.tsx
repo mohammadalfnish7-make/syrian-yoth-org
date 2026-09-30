@@ -17,6 +17,7 @@ type Carousel3DProps = {
   readMoreLabelAr?: string;
   readMoreLabelEn?: string;
   ariaLabel?: string;
+  showReadMore?: boolean;
 };
 
 const VISIBLE_RADIUS = 2;
@@ -65,6 +66,7 @@ export function Carousel3D({
   readMoreLabelAr = "اقرأ أكثر",
   readMoreLabelEn = "Read more",
   ariaLabel = "Carousel",
+  showReadMore = true,
 }: Carousel3DProps) {
   const pathname = usePathname() || "/ar";
   const [current, setCurrent] = useState(0);
@@ -168,14 +170,16 @@ export function Carousel3D({
         ))}
       </div>
 
-      <div className="carousel-3d__footer">
-        <a href={localize(readMoreHref)} className="carousel-3d__read-more content-ar">
-          {readMoreLabelAr}
-        </a>
-        <a href={localize(readMoreHref)} className="carousel-3d__read-more content-en">
-          {readMoreLabelEn}
-        </a>
-      </div>
+      {showReadMore ? (
+        <div className="carousel-3d__footer">
+          <a href={localize(readMoreHref)} className="carousel-3d__read-more content-ar">
+            {readMoreLabelAr}
+          </a>
+          <a href={localize(readMoreHref)} className="carousel-3d__read-more content-en">
+            {readMoreLabelEn}
+          </a>
+        </div>
+      ) : null}
     </div>
   );
 }

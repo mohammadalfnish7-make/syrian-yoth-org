@@ -40,6 +40,7 @@ export type PublicEvent = {
   startsAt: string | null;
   isRolling: boolean;
   registerPath: string;
+  imageUrl: string | null;
 };
 
 export async function getPrograms(): Promise<ProgramCard[]> {
@@ -165,6 +166,7 @@ export async function getEvents(): Promise<PublicEvent[]> {
       startsAt: event.startsAt?.toISOString() ?? null,
       isRolling: event.isRolling,
       registerPath: event.registerPath,
+      imageUrl: event.imageUrl,
     }));
   } catch {
     return FALLBACK_EVENTS.map(toPublicEvent);

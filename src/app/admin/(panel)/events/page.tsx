@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { AdminPageHeader } from "@/components/admin/AdminShell";
+import { ImageUploader } from "@/components/admin/ImageUploader";
 import { Loader2, Plus, Trash2 } from "lucide-react";
 
 type EventRow = {
@@ -22,6 +23,7 @@ const EMPTY = {
   startsAt: "",
   isRolling: true,
   registerPath: "/get-involved",
+  imageUrl: null as string | null,
 };
 
 export default function EventsAdminPage() {
@@ -123,6 +125,13 @@ export default function EventsAdminPage() {
               <label>رابط التسجيل</label>
               <input className="admin-field__input admin-field__input--plain" value={form.registerPath} onChange={(e) => setForm({ ...form, registerPath: e.target.value })} />
             </div>
+            <ImageUploader
+              category="events"
+              label="صورة الفعالية"
+              currentUrl={form.imageUrl}
+              onUpload={(url) => setForm({ ...form, imageUrl: url })}
+              onRemove={() => setForm({ ...form, imageUrl: null })}
+            />
           </div>
           <div className="admin-form-actions">
             <button type="submit" className="admin-btn-primary">إضافة</button>

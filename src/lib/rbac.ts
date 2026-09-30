@@ -52,6 +52,7 @@ export function getUploadCategoryPermission(
     news: "manage_news",
     partners: "manage_partners",
     programs: "manage_programs",
+    events: "manage_programs",
     "focus-areas": "manage_focus_areas",
     site: "manage_site_settings",
     logos: "manage_site_settings",

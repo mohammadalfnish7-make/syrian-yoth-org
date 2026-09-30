@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { EventsCarousel } from "@/components/EventsCarousel";
 import { EventsList } from "@/components/EventsList";
 import { PageIntro } from "@/components/PageIntro";
 import { localeMetadata } from "@/lib/locale";
@@ -35,6 +36,9 @@ export default async function EventsPage() {
       />
       <section className="section">
         <div className="container-yaf">
+          <div className="events-showcase">
+            <EventsCarousel events={events} showReadMore={false} />
+          </div>
           <EventsList events={events} />
         </div>
       </section>
