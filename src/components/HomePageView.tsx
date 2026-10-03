@@ -41,7 +41,7 @@ export default async function HomePageView() {
   return (
     <main>
       <section className="hero-section" id="home">
-        <HeroVideoBackground />
+        <HeroVideoBackground videoUrl={settings.hero.videoUrl} />
         <div className="container-yaf hero-section__content">
           <div className="hero-badge content-ar">
             <span className="hero-badge__dot" />

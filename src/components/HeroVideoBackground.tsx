@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState } from "react";
 
-const VIDEO_SRC = "/videos/hero-bg.mp4";
 const POSTER_SRC = "/videos/hero-poster.jpg";
 
 function tryPlay(video: HTMLVideoElement) {
@@ -14,7 +13,11 @@ function tryPlay(video: HTMLVideoElement) {
   }
 }
 
-export function HeroVideoBackground() {
+export function HeroVideoBackground({ videoUrl }: { videoUrl: string | null }) {
+  if (typeof window !== "undefined") {
+    const w = window as Window & { __heroRender?: number };
+    w.__heroRender = (w.__heroRender ?? 0) + 1;
+  }
   const videoRef = useRef<HTMLVideoElement>(null);
   const [videoReady, setVideoReady] = useState(false);
   const [allowVideo, setAllowVideo] = useState(true);
@@ -36,7 +39,13 @@ export function HeroVideoBackground() {
 
   useEffect(() => {
     const video = videoRef.current;
-    if (!video || !allowVideo) return;
+    document.documentElement.dataset.heroEffect = video
+      ? `ready-${video.readyState}`
+      : "no-video";
+    if (!video || !allowVideo || !videoUrl) return;
+
+    setVideoReady(false);
+    video.dataset.bound = String(video.readyState);
 
     if (typeof window.matchMedia !== "function") {
       tryPlay(video);
@@ -58,13 +67,25 @@ export function HeroVideoBackground() {
       }
     }
 
+    function revealIfReady() {
+      const el = videoRef.current;
+      if (el && el.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA) {
+        setVideoReady(true);
+      }
+    }
+
     applyMotionPreference();
+    revealIfReady();
+    video.addEventListener("canplay", revealIfReady);
+    video.addEventListener("playing", revealIfReady);
     motionQuery.addEventListener("change", applyMotionPreference);
 
     return () => {
+      video.removeEventListener("canplay", revealIfReady);
+      video.removeEventListener("playing", revealIfReady);
       motionQuery.removeEventListener("change", applyMotionPreference);
     };
-  }, [allowVideo]);
+  }, [allowVideo, videoUrl]);
 
   return (
     <div className="hero-section__media" aria-hidden="true">
@@ -76,8 +97,9 @@ export function HeroVideoBackground() {
         decoding="async"
         className={`hero-section__poster${videoReady ? " hero-section__poster--hidden" : ""}`}
       />
-      {allowVideo ? (
+      {allowVideo && videoUrl ? (
         <video
+          key={videoUrl}
           ref={videoRef}
           className={`hero-section__video${videoReady ? " hero-section__video--visible" : ""}`}
           autoPlay
@@ -88,7 +110,7 @@ export function HeroVideoBackground() {
           poster={POSTER_SRC}
           onCanPlay={() => setVideoReady(true)}
         >
-          <source src={VIDEO_SRC} type="video/mp4" />
+          <source src={videoUrl} type="video/mp4" />
         </video>
       ) : null}
       <div className="hero-section__overlay" />

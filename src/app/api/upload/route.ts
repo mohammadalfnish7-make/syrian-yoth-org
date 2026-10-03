@@ -7,9 +7,11 @@ import {
 } from "@/lib/api-utils";
 import {
   processAndSaveImage,
+  processAndSaveVideo,
   deleteImage,
   extractFilenameFromUrl,
   extractCategoryFromUrl,
+  isImageUploadCategory,
   isUploadCategory,
   type UploadCategory,
 } from "@/lib/upload";
@@ -41,6 +43,14 @@ export async function POST(request: NextRequest) {
 
     if (!canUploadCategory(auth.session.role, category)) {
       return apiError("ليس لديك صلاحية لهذا الإجراء.", 403);
+    }
+
+    if (!isImageUploadCategory(category)) {
+      const result = await processAndSaveVideo(file);
+      return apiSuccess({
+        url: result.url,
+        filename: result.filename,
+      });
     }
 
     const result = await processAndSaveImage(file, category);

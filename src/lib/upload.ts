@@ -1,9 +1,9 @@
-import { mkdir, readFile, unlink } from "fs/promises";
+import { mkdir, readFile, unlink, writeFile } from "fs/promises";
 import path from "path";
 import sharp from "sharp";
 import { randomUUID } from "crypto";
 
-export type UploadCategory =
+export type ImageUploadCategory =
   | "news"
   | "partners"
   | "programs"
@@ -13,13 +13,20 @@ export type UploadCategory =
   | "logos"
   | "managers";
 
-const ALLOWED_MIME_TYPES = ["image/jpeg", "image/png", "image/webp"];
+export type UploadCategory = ImageUploadCategory | "videos";
 
-const UPLOAD_FILENAME_PATTERN =
+const ALLOWED_MIME_TYPES = ["image/jpeg", "image/png", "image/webp"];
+const ALLOWED_VIDEO_MIME_TYPES = ["video/mp4", "application/mp4"];
+const VIDEO_MAX_MB = 40;
+
+const IMAGE_FILENAME_PATTERN =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\.webp$/i;
 
+const VIDEO_FILENAME_PATTERN =
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\.mp4$/i;
+
 const CATEGORY_CONFIG: Record<
-  UploadCategory,
+  ImageUploadCategory,
   { maxSizeMB: number; maxWidth: number; quality: number }
 > = {
   news: { maxSizeMB: 5, maxWidth: 1920, quality: 82 },
@@ -32,10 +39,29 @@ const CATEGORY_CONFIG: Record<
   managers: { maxSizeMB: 3, maxWidth: 800, quality: 88 },
 };
 
-export const UPLOAD_CATEGORIES = Object.keys(CATEGORY_CONFIG) as UploadCategory[];
+export const UPLOAD_CATEGORIES = [
+  ...(Object.keys(CATEGORY_CONFIG) as ImageUploadCategory[]),
+  "videos",
+] as UploadCategory[];
 
 export function isUploadCategory(value: string): value is UploadCategory {
   return (UPLOAD_CATEGORIES as string[]).includes(value);
+}
+
+export function isImageUploadCategory(
+  value: UploadCategory
+): value is ImageUploadCategory {
+  return value !== "videos";
+}
+
+function isAllowedUploadFilename(category: UploadCategory, filename: string) {
+  return category === "videos"
+    ? VIDEO_FILENAME_PATTERN.test(filename)
+    : IMAGE_FILENAME_PATTERN.test(filename);
+}
+
+export function contentTypeForUpload(filename: string): string {
+  return filename.toLowerCase().endsWith(".mp4") ? "video/mp4" : "image/webp";
 }
 
 function getUploadDir(): string {
@@ -66,7 +92,7 @@ export function resolveUploadPath(
     throw new Error("اسم الملف غير صالح.");
   }
 
-  if (!UPLOAD_FILENAME_PATTERN.test(filename)) {
+  if (!isAllowedUploadFilename(category, filename)) {
     throw new Error("اسم الملف غير صالح.");
   }
 
@@ -80,9 +106,46 @@ export function resolveUploadPath(
   return filePath;
 }
 
+function isMp4Buffer(buffer: Buffer): boolean {
+  if (buffer.length < 12) return false;
+  return buffer.subarray(4, 8).toString("ascii") === "ftyp";
+}
+
+export async function processAndSaveVideo(
+  file: File
+): Promise<{ url: string; filename: string }> {
+  const typeAllowed =
+    ALLOWED_VIDEO_MIME_TYPES.includes(file.type) ||
+    (file.type === "" && file.name.toLowerCase().endsWith(".mp4"));
+
+  if (!typeAllowed) {
+    throw new Error("نوع الملف غير مدعوم. يُسمح بملفات MP4 فقط.");
+  }
+
+  const maxBytes = VIDEO_MAX_MB * 1024 * 1024;
+  if (file.size > maxBytes) {
+    throw new Error(`حجم الملف يتجاوز الحد الأقصى (${VIDEO_MAX_MB} ميغابايت).`);
+  }
+
+  const buffer = Buffer.from(await file.arrayBuffer());
+  if (!isMp4Buffer(buffer)) {
+    throw new Error("محتوى الملف غير صالح.");
+  }
+
+  const filename = `${randomUUID()}.mp4`;
+  const dir = getCategoryDir("videos");
+  await mkdir(dir, { recursive: true });
+  await writeFile(path.join(dir, filename), buffer);
+
+  return {
+    url: getPublicUrl("videos", filename),
+    filename,
+  };
+}
+
 export async function processAndSaveImage(
   file: File,
-  category: UploadCategory
+  category: ImageUploadCategory
 ): Promise<{ url: string; filename: string }> {
   const config = CATEGORY_CONFIG[category];
 
@@ -157,6 +220,6 @@ export function extractCategoryFromUrl(url: string): UploadCategory | null {
   const match = url.match(/\/api\/uploads\/([^/]+)\//);
   if (!match) return null;
   const category = match[1] as UploadCategory;
-  if (category in CATEGORY_CONFIG) return category;
+  if (category === "videos" || category in CATEGORY_CONFIG) return category;
   return null;
 }

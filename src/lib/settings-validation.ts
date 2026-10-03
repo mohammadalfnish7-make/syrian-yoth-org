@@ -37,6 +37,7 @@ export const adminSettingsSchema = z
         subtitle: z.string().max(1000),
         tagline: z.string().max(200),
         imageUrl: urlOrPath.nullable(),
+        videoUrl: urlOrPath.nullable().optional(),
       })
       .optional(),
     about: z

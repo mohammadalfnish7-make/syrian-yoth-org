@@ -57,6 +57,7 @@ export function getUploadCategoryPermission(
     site: "manage_site_settings",
     logos: "manage_site_settings",
     managers: "manage_board_members",
+    videos: "manage_site_settings",
   };
   return map[category];
 }

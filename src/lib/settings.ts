@@ -1,12 +1,13 @@
 import { normalizeAboutSettings } from "@/lib/normalize-about";
 import { PROFILE_MISSION, PROFILE_VISION } from "@/lib/profile-content";
 import { prisma } from "@/lib/prisma";
-import type {
-  BrandingSettings,
-  ContactSettings,
-  HeroSettings,
-  PublicSettings,
-  SocialLinksSettings,
+import {
+  DEFAULT_HERO_VIDEO_URL,
+  type BrandingSettings,
+  type ContactSettings,
+  type HeroSettings,
+  type PublicSettings,
+  type SocialLinksSettings,
 } from "@/types/site";
 
 const DEFAULT_SETTINGS: PublicSettings = {
@@ -28,6 +29,7 @@ const DEFAULT_SETTINGS: PublicSettings = {
     subtitle: "نصنع من طاقة الشباب السوري قيادةً تبني، لا فعاليات تمر.",
     tagline: "A capable, empowered generation.",
     imageUrl: "/images/hero/ramadan-session.webp",
+    videoUrl: DEFAULT_HERO_VIDEO_URL,
   },
   about: {
     mission: PROFILE_MISSION,

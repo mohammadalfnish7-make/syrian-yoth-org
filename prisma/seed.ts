@@ -1,5 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
+import { DEFAULT_HERO_VIDEO_URL } from "../src/types/site";
 import {
   FALLBACK_EVENTS,
   PROFILE_FOCUS_AREAS,
@@ -72,6 +73,7 @@ const DEFAULT_SITE_SETTINGS = [
       subtitle: "نصنع من طاقة الشباب السوري قيادةً تبني، لا فعاليات تمر.",
       tagline: "A capable, empowered generation.",
       imageUrl: "/images/hero/ramadan-session.webp",
+      videoUrl: DEFAULT_HERO_VIDEO_URL,
     },
   },
   {

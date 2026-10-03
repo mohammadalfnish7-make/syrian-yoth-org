@@ -16,6 +16,7 @@ const securityHeaders = [
       "script-src 'self' 'unsafe-inline'",
       "style-src 'self' 'unsafe-inline'",
       "font-src 'self'",
+      "media-src 'self' blob: https:",
       "connect-src 'self'",
       "frame-ancestors 'none'",
       "base-uri 'self'",
@@ -34,6 +35,9 @@ const securityHeaders = [
 
 const nextConfig: NextConfig = {
   output: "standalone",
+  experimental: {
+    middlewareClientMaxBodySize: "40mb",
+  },
   images: {
     remotePatterns: [],
   },

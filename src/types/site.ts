@@ -4,11 +4,14 @@ export type BrandingSettings = {
   faviconUrl: string | null;
 };
 
+export const DEFAULT_HERO_VIDEO_URL = "/videos/hero-bg.mp4";
+
 export type HeroSettings = {
   title: string;
   subtitle: string;
   tagline: string;
   imageUrl: string | null;
+  videoUrl: string | null;
 };
 
 export type ContactSettings = {

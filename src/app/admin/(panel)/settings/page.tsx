@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { ImageUploader } from "@/components/admin/ImageUploader";
+import { VideoUploader } from "@/components/admin/VideoUploader";
+import { DEFAULT_HERO_VIDEO_URL } from "@/types/site";
 import { AdminPageHeader } from "@/components/admin/AdminShell";
 import { Loader2, Save } from "lucide-react";
 
@@ -24,6 +26,7 @@ type SiteSettings = {
     subtitle: string;
     tagline: string;
     imageUrl: string | null;
+    videoUrl: string | null;
   };
   branding: {
     logoUrl: string | null;
@@ -48,7 +51,17 @@ export default function AdminSettingsPage() {
     fetch("/api/admin/settings")
       .then((res) => res.json())
       .then((data) => {
-        setSettings(data);
+        setSettings({
+          ...data,
+          hero: {
+            title: "",
+            subtitle: "",
+            tagline: "",
+            imageUrl: null,
+            videoUrl: DEFAULT_HERO_VIDEO_URL,
+            ...(data.hero ?? {}),
+          },
+        });
         setLoading(false);
       })
       .catch(() => setLoading(false));
@@ -197,6 +210,21 @@ export default function AdminSettingsPage() {
                 className="w-full px-4 py-2 border border-brand-grey-2 rounded-md"
               />
             </div>
+            <VideoUploader
+              currentUrl={settings.hero.videoUrl}
+              onUpload={(url) =>
+                setSettings({
+                  ...settings,
+                  hero: { ...settings.hero, videoUrl: url },
+                })
+              }
+              onRemove={() =>
+                setSettings({
+                  ...settings,
+                  hero: { ...settings.hero, videoUrl: null },
+                })
+              }
+            />
             <ImageUploader
               category="site"
               label="صورة البانر الرئيسي"
