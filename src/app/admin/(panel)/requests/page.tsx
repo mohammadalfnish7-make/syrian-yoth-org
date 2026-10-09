@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { AdminPageHeader } from "@/components/admin/AdminShell";
-import { Loader2 } from "lucide-react";
+import { Download, Loader2 } from "lucide-react";
 
 type VolunteerReq = {
   id: string;
@@ -45,6 +45,13 @@ type InitiativeReq = {
   submittedAt: string;
 };
 
+const EXPORTS = [
+  { type: "volunteer", labelAr: "تصدير التطوع", labelEn: "Export volunteers" },
+  { type: "partner", labelAr: "تصدير الشراكة", labelEn: "Export partners" },
+  { type: "program", labelAr: "تصدير البرامج", labelEn: "Export programs" },
+  { type: "initiative", labelAr: "تصدير المبادرات", labelEn: "Export initiatives" },
+] as const;
+
 const STATUS_LABELS: Record<string, string> = {
   new: "جديد",
   reviewed: "تمت المراجعة",
@@ -58,6 +65,8 @@ export default function RequestsPage() {
   const [program, setProgram] = useState<ProgramReq[]>([]);
   const [initiative, setInitiative] = useState<InitiativeReq[]>([]);
   const [loading, setLoading] = useState(true);
+  const [exporting, setExporting] = useState<string | null>(null);
+  const [exportError, setExportError] = useState("");
   const [tab, setTab] = useState<"volunteer" | "partner" | "program" | "initiative">("volunteer");
 
   useEffect(() => {
@@ -71,6 +80,27 @@ export default function RequestsPage() {
         setLoading(false);
       });
   }, []);
+
+  async function exportSheet(type: (typeof EXPORTS)[number]["type"]) {
+    setExporting(type);
+    setExportError("");
+    const res = await fetch(`/api/admin/requests/export?type=${type}`);
+    if (!res.ok) {
+      setExporting(null);
+      setExportError("تعذر تصدير الملف.");
+      return;
+    }
+    const blob = await res.blob();
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download =
+      res.headers.get("Content-Disposition")?.match(/filename="([^"]+)"/)?.[1] ||
+      `${type}-requests.xls`;
+    link.click();
+    URL.revokeObjectURL(url);
+    setExporting(null);
+  }
 
   async function updateStatus(
     id: string,
@@ -138,6 +168,27 @@ export default function RequestsPage() {
           المبادرات ({initiative.length})
         </button>
       </div>
+
+      <div className="admin-toolbar flex flex-wrap gap-2">
+        {EXPORTS.map((item) => (
+          <button
+            key={item.type}
+            type="button"
+            className="admin-btn-ghost"
+            onClick={() => exportSheet(item.type)}
+            disabled={exporting === item.type}
+          >
+            <Download size={16} />
+            <span className="content-ar">{item.labelAr}</span>
+            <span className="content-en">{item.labelEn}</span>
+          </button>
+        ))}
+      </div>
+      {exportError ? (
+        <div className="admin-alert admin-alert--error" role="status">
+          {exportError}
+        </div>
+      ) : null}
 
       {tab === "volunteer" ? (
         <div className="admin-table-wrap">
