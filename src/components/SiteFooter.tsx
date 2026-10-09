@@ -75,10 +75,10 @@ export function SiteFooter({ settings }: SiteFooterProps) {
             <ul className="footer__links">
               <li>
                 <LocaleLink href="/about" className="content-ar">
-                  من نحن
+                  {settings.about.label.ar}
                 </LocaleLink>
                 <LocaleLink href="/about" className="content-en">
-                  About
+                  {settings.about.label.en}
                 </LocaleLink>
               </li>
               <li>

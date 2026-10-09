@@ -1,13 +1,12 @@
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
+import { DEFAULT_ABOUT } from "../src/lib/about-defaults";
 import { DEFAULT_HERO_VIDEO_URL } from "../src/types/site";
 import {
   FALLBACK_EVENTS,
   PROFILE_FOCUS_AREAS,
   PROFILE_IMPACT_STATS,
-  PROFILE_MISSION,
   PROFILE_PROGRAMS,
-  PROFILE_VISION,
 } from "../src/lib/profile-content";
 
 const prisma = new PrismaClient();
@@ -78,20 +77,7 @@ const DEFAULT_SITE_SETTINGS = [
   },
   {
     key: "about",
-    value: {
-      mission: PROFILE_MISSION,
-      vision: PROFILE_VISION,
-      yearsOfExperience: "10",
-      values: [
-        { ar: "الكرامة", en: "Dignity" },
-        { ar: "المسؤولية", en: "Responsibility" },
-        { ar: "العدل", en: "Justice" },
-        { ar: "الأمانة", en: "Integrity" },
-        { ar: "الإحسان", en: "Excellence" },
-        { ar: "الانتماء", en: "Belonging" },
-        { ar: "التكافل", en: "Solidarity" },
-      ],
-    },
+    value: DEFAULT_ABOUT,
   },
   {
     key: "branding",

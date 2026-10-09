@@ -11,6 +11,14 @@ function isBilingualText(value: unknown): value is BilingualText {
   );
 }
 
+function renameLegacyValue(value: BilingualText): BilingualText {
+  if (value.ar !== "الإحسان" && value.ar !== "الاحسان") return value;
+  return {
+    ar: "الإتقان",
+    en: value.en === "Excellence" || value.en === "الإحسان" ? "Mastery" : value.en || "Mastery",
+  };
+}
+
 function normalizeBilingualValue(
   value: unknown,
   fallback: BilingualText
@@ -40,7 +48,9 @@ export function normalizeAboutSettings(
 
   const values = Array.isArray(data.values)
     ? data.values.map((value, index) =>
-        normalizeBilingualValue(value, defaults.values[index] ?? { ar: "", en: "" })
+        renameLegacyValue(
+          normalizeBilingualValue(value, defaults.values[index] ?? { ar: "", en: "" })
+        )
       )
     : defaults.values;
 
@@ -49,5 +59,12 @@ export function normalizeAboutSettings(
       ? data.yearsOfExperience
       : defaults.yearsOfExperience;
 
-  return { mission, vision, values, yearsOfExperience };
+  const label = normalizeBilingualValue(data.label, defaults.label);
+  const title = normalizeBilingualValue(data.title, defaults.title);
+  const presenceLabel = normalizeBilingualValue(
+    data.presenceLabel,
+    defaults.presenceLabel
+  );
+
+  return { label, title, mission, vision, presenceLabel, values, yearsOfExperience };
 }

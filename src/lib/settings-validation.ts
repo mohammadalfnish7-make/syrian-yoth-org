@@ -42,6 +42,18 @@ export const adminSettingsSchema = z
       .optional(),
     about: z
       .object({
+        label: z
+          .object({
+            ar: z.string().max(200),
+            en: z.string().max(200),
+          })
+          .optional(),
+        title: z
+          .object({
+            ar: z.string().max(300),
+            en: z.string().max(300),
+          })
+          .optional(),
         mission: z.object({
           ar: z.string().max(2000),
           en: z.string().max(2000),
@@ -50,6 +62,12 @@ export const adminSettingsSchema = z
           ar: z.string().max(2000),
           en: z.string().max(2000),
         }),
+        presenceLabel: z
+          .object({
+            ar: z.string().max(500),
+            en: z.string().max(500),
+          })
+          .optional(),
         values: z
           .array(
             z.object({

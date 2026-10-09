@@ -35,8 +35,11 @@ export type BilingualText = {
 };
 
 export type AboutSettings = {
+  label: BilingualText;
+  title: BilingualText;
   mission: BilingualText;
   vision: BilingualText;
+  presenceLabel: BilingualText;
   values: BilingualText[];
   yearsOfExperience: string;
 };

@@ -1,9 +1,9 @@
 import { LangSwitch } from "@/components/LangSwitch";
 import { LocaleLink } from "@/components/LocaleLink";
+import { DEFAULT_ABOUT } from "@/lib/about-defaults";
 import type { PublicSettings } from "@/types/site";
 
 const NAV_LINKS = [
-  { href: "/about", labelAr: "من نحن", labelEn: "About" },
   { href: "/programs", labelAr: "البرامج", labelEn: "Programs" },
   { href: "/events", labelAr: "الفعاليات", labelEn: "Events" },
   { href: "/impact", labelAr: "الأثر", labelEn: "Impact" },
@@ -12,6 +12,8 @@ const NAV_LINKS = [
 ] as const;
 
 export function SiteHeader({ settings }: { settings?: PublicSettings }) {
+  const aboutLabel = settings?.about.label ?? DEFAULT_ABOUT.label;
+
   return (
     <header className="site-header">
       <div className="container-yaf header__inner">
@@ -39,6 +41,14 @@ export function SiteHeader({ settings }: { settings?: PublicSettings }) {
 
         <nav className="nav">
           <ul className="nav__list">
+            <li>
+              <LocaleLink href="/about" className="nav__link content-ar">
+                {aboutLabel.ar}
+              </LocaleLink>
+              <LocaleLink href="/about" className="nav__link content-en">
+                {aboutLabel.en}
+              </LocaleLink>
+            </li>
             {NAV_LINKS.map((link) => (
               <li key={link.href}>
                 <LocaleLink href={link.href} className="nav__link content-ar">

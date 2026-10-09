@@ -71,10 +71,10 @@ export const PROFILE_VALUE_NOTES = [
     noteEn: "Honesty is the condition for anything built to last. We say what we do, and do what we say.",
   },
   {
-    ar: "الإحسان",
-    en: "Excellence",
-    noteAr: "إحسان العمل قيمة في ذاته، لا وسيلة لغاية.",
-    noteEn: "Doing the work well is a value in itself, not merely a means to an end.",
+    ar: "الإتقان",
+    en: "Mastery",
+    noteAr: "إتقان العمل قيمة في ذاته، لا وسيلة لغاية.",
+    noteEn: "Doing the work with mastery is a value in itself, not merely a means to an end.",
   },
   {
     ar: "الانتماء",

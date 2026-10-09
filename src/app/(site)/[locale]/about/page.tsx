@@ -19,9 +19,11 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
   const { locale } = await params;
+  const settings = await getPublicSettings();
+  const title = locale === "en" ? settings.about.label.en : settings.about.label.ar;
   return localeMetadata({
     locale,
-    title: "من نحن",
+    title,
     description: PROFILE_STORY.en,
     path: "/about",
   });
@@ -33,8 +35,8 @@ export default async function AboutPage() {
   return (
     <main>
       <PageIntro
-        eyebrowAr="من نحن"
-        eyebrowEn="About"
+        eyebrowAr={settings.about.label.ar}
+        eyebrowEn={settings.about.label.en}
         titleAr="نحن وعد لهذا الجيل"
         titleEn="A promise to this generation"
         ledeAr={PROFILE_SLOGAN.ar}
@@ -101,14 +103,21 @@ export default async function AboutPage() {
           <h2 className="content-ar">القيم</h2>
           <h2 className="content-en">Values</h2>
           <dl className="value-defs">
-            {PROFILE_VALUE_NOTES.map((value) => (
-              <div key={value.en}>
-                <dt className="content-ar">{value.ar}</dt>
-                <dt className="content-en">{value.en}</dt>
-                <dd className="content-ar">{value.noteAr}</dd>
-                <dd className="content-en">{value.noteEn}</dd>
-              </div>
-            ))}
+            {settings.about.values.map((value, index) => {
+              const note = PROFILE_VALUE_NOTES.find((item) => item.ar === value.ar);
+              return (
+                <div key={`${value.ar}-${index}`}>
+                  <dt className="content-ar">{value.ar}</dt>
+                  <dt className="content-en">{value.en}</dt>
+                  {note ? (
+                    <>
+                      <dd className="content-ar">{note.noteAr}</dd>
+                      <dd className="content-en">{note.noteEn}</dd>
+                    </>
+                  ) : null}
+                </div>
+              );
+            })}
           </dl>
         </div>
       </section>

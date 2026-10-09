@@ -3,9 +3,11 @@
 import { useState, useEffect } from "react";
 import { ImageUploader } from "@/components/admin/ImageUploader";
 import { VideoUploader } from "@/components/admin/VideoUploader";
-import { DEFAULT_HERO_VIDEO_URL } from "@/types/site";
+import { DEFAULT_ABOUT } from "@/lib/about-defaults";
+import { normalizeAboutSettings } from "@/lib/normalize-about";
+import { DEFAULT_HERO_VIDEO_URL, type AboutSettings } from "@/types/site";
 import { AdminPageHeader } from "@/components/admin/AdminShell";
-import { Loader2, Save } from "lucide-react";
+import { Loader2, Plus, Save, Trash2 } from "lucide-react";
 
 type SiteSettings = {
   contact: {
@@ -33,12 +35,7 @@ type SiteSettings = {
     logoMarkUrl: string | null;
     faviconUrl: string | null;
   };
-  about: {
-    mission: { ar: string; en: string };
-    vision: { ar: string; en: string };
-    values: { ar: string; en: string }[];
-    yearsOfExperience: string;
-  };
+  about: AboutSettings;
 };
 
 export default function AdminSettingsPage() {
@@ -61,6 +58,7 @@ export default function AdminSettingsPage() {
             videoUrl: DEFAULT_HERO_VIDEO_URL,
             ...(data.hero ?? {}),
           },
+          about: normalizeAboutSettings(data.about, DEFAULT_ABOUT),
         });
         setLoading(false);
       })
@@ -72,11 +70,21 @@ export default function AdminSettingsPage() {
     setSaving(true);
     setMessage("");
 
+    const payload = {
+      ...settings,
+      about: {
+        ...settings.about,
+        values: settings.about.values.filter(
+          (value) => value.ar.trim() || value.en.trim()
+        ),
+      },
+    };
+
     try {
       const res = await fetch("/api/admin/settings", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(settings),
+        body: JSON.stringify(payload),
       });
 
       if (res.ok) {
@@ -249,15 +257,239 @@ export default function AdminSettingsPage() {
         <section className="admin-card">
           <h2 className="admin-card__title">معلومات من نحن</h2>
           <div className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm mb-1">الاسم (عربي)</label>
+                <input
+                  type="text"
+                  value={settings.about.label.ar}
+                  onChange={(e) =>
+                    setSettings({
+                      ...settings,
+                      about: {
+                        ...settings.about,
+                        label: { ...settings.about.label, ar: e.target.value },
+                      },
+                    })
+                  }
+                  className="w-full px-4 py-2 border border-brand-grey-2 rounded-md"
+                />
+              </div>
+              <div>
+                <label className="block text-sm mb-1">Name (English)</label>
+                <input
+                  type="text"
+                  value={settings.about.label.en}
+                  onChange={(e) =>
+                    setSettings({
+                      ...settings,
+                      about: {
+                        ...settings.about,
+                        label: { ...settings.about.label, en: e.target.value },
+                      },
+                    })
+                  }
+                  className="w-full px-4 py-2 border border-brand-grey-2 rounded-md"
+                  dir="ltr"
+                />
+              </div>
+              <div>
+                <label className="block text-sm mb-1">العنوان (عربي)</label>
+                <input
+                  type="text"
+                  value={settings.about.title.ar}
+                  onChange={(e) =>
+                    setSettings({
+                      ...settings,
+                      about: {
+                        ...settings.about,
+                        title: { ...settings.about.title, ar: e.target.value },
+                      },
+                    })
+                  }
+                  className="w-full px-4 py-2 border border-brand-grey-2 rounded-md"
+                />
+              </div>
+              <div>
+                <label className="block text-sm mb-1">Title (English)</label>
+                <input
+                  type="text"
+                  value={settings.about.title.en}
+                  onChange={(e) =>
+                    setSettings({
+                      ...settings,
+                      about: {
+                        ...settings.about,
+                        title: { ...settings.about.title, en: e.target.value },
+                      },
+                    })
+                  }
+                  className="w-full px-4 py-2 border border-brand-grey-2 rounded-md"
+                  dir="ltr"
+                />
+              </div>
+            </div>
             <div>
-              <label className="block text-sm mb-1">رقم الحضور في قسم من نحن (مثال: 10 محافظات)</label>
-              <input
-                type="text"
-                value={settings.about?.yearsOfExperience || ""}
+              <label className="block text-sm mb-1">الوصف (عربي)</label>
+              <textarea
+                value={settings.about.mission.ar}
                 onChange={(e) =>
                   setSettings({
                     ...settings,
-                    about: { ...settings.about, yearsOfExperience: e.target.value },
+                    about: {
+                      ...settings.about,
+                      mission: { ...settings.about.mission, ar: e.target.value },
+                    },
+                  })
+                }
+                rows={4}
+                className="w-full px-4 py-2 border border-brand-grey-2 rounded-md"
+              />
+            </div>
+            <div>
+              <label className="block text-sm mb-1">Description (English)</label>
+              <textarea
+                value={settings.about.mission.en}
+                onChange={(e) =>
+                  setSettings({
+                    ...settings,
+                    about: {
+                      ...settings.about,
+                      mission: { ...settings.about.mission, en: e.target.value },
+                    },
+                  })
+                }
+                rows={4}
+                className="w-full px-4 py-2 border border-brand-grey-2 rounded-md"
+                dir="ltr"
+              />
+            </div>
+            <div>
+              <p className="text-sm font-medium mb-2">قيمنا</p>
+              <div className="space-y-3">
+                {settings.about.values.map((value, index) => (
+                  <div key={index} className="grid grid-cols-1 md:grid-cols-[1fr_1fr_auto] gap-3 items-end">
+                    <div>
+                      <label className="block text-sm mb-1">القيمة (عربي)</label>
+                      <input
+                        type="text"
+                        value={value.ar}
+                        onChange={(e) => {
+                          const values = settings.about.values.map((item, itemIndex) =>
+                            itemIndex === index ? { ...item, ar: e.target.value } : item
+                          );
+                          setSettings({
+                            ...settings,
+                            about: { ...settings.about, values },
+                          });
+                        }}
+                        className="w-full px-4 py-2 border border-brand-grey-2 rounded-md"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm mb-1">Value (English)</label>
+                      <input
+                        type="text"
+                        value={value.en}
+                        onChange={(e) => {
+                          const values = settings.about.values.map((item, itemIndex) =>
+                            itemIndex === index ? { ...item, en: e.target.value } : item
+                          );
+                          setSettings({
+                            ...settings,
+                            about: { ...settings.about, values },
+                          });
+                        }}
+                        className="w-full px-4 py-2 border border-brand-grey-2 rounded-md"
+                        dir="ltr"
+                      />
+                    </div>
+                    <button
+                      type="button"
+                      className="admin-btn-icon admin-btn-icon--danger"
+                      onClick={() => {
+                        const values = settings.about.values.filter((_, itemIndex) => itemIndex !== index);
+                        setSettings({
+                          ...settings,
+                          about: { ...settings.about, values },
+                        });
+                      }}
+                      aria-label="حذف القيمة"
+                    >
+                      <Trash2 size={16} />
+                    </button>
+                  </div>
+                ))}
+              </div>
+              <button
+                type="button"
+                className="admin-btn-ghost mt-3"
+                onClick={() =>
+                  setSettings({
+                    ...settings,
+                    about: {
+                      ...settings.about,
+                      values: [...settings.about.values, { ar: "", en: "" }],
+                    },
+                  })
+                }
+              >
+                <Plus size={16} />
+                قيمة جديدة
+              </button>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm mb-1">رقم الحضور (مثال: 10)</label>
+                <input
+                  type="text"
+                  value={settings.about.yearsOfExperience}
+                  onChange={(e) =>
+                    setSettings({
+                      ...settings,
+                      about: { ...settings.about, yearsOfExperience: e.target.value },
+                    })
+                  }
+                  className="w-full px-4 py-2 border border-brand-grey-2 rounded-md"
+                  dir="ltr"
+                />
+              </div>
+            </div>
+            <div>
+              <label className="block text-sm mb-1">وصف الرقم (عربي)</label>
+              <input
+                type="text"
+                value={settings.about.presenceLabel.ar}
+                onChange={(e) =>
+                  setSettings({
+                    ...settings,
+                    about: {
+                      ...settings.about,
+                      presenceLabel: {
+                        ...settings.about.presenceLabel,
+                        ar: e.target.value,
+                      },
+                    },
+                  })
+                }
+                className="w-full px-4 py-2 border border-brand-grey-2 rounded-md"
+              />
+            </div>
+            <div>
+              <label className="block text-sm mb-1">Number caption (English)</label>
+              <input
+                type="text"
+                value={settings.about.presenceLabel.en}
+                onChange={(e) =>
+                  setSettings({
+                    ...settings,
+                    about: {
+                      ...settings.about,
+                      presenceLabel: {
+                        ...settings.about.presenceLabel,
+                        en: e.target.value,
+                      },
+                    },
                   })
                 }
                 className="w-full px-4 py-2 border border-brand-grey-2 rounded-md"

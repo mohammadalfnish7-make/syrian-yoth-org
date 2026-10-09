@@ -1,3 +1,4 @@
+import { DEFAULT_ABOUT } from "@/lib/about-defaults";
 import { normalizeAboutSettings } from "@/lib/normalize-about";
 import { PROFILE_MISSION, PROFILE_VISION } from "@/lib/profile-content";
 import { prisma } from "@/lib/prisma";
@@ -31,20 +32,7 @@ const DEFAULT_SETTINGS: PublicSettings = {
     imageUrl: "/images/hero/ramadan-session.webp",
     videoUrl: DEFAULT_HERO_VIDEO_URL,
   },
-  about: {
-    mission: PROFILE_MISSION,
-    vision: PROFILE_VISION,
-    values: [
-      { ar: "الكرامة", en: "Dignity" },
-      { ar: "المسؤولية", en: "Responsibility" },
-      { ar: "العدل", en: "Justice" },
-      { ar: "الأمانة", en: "Integrity" },
-      { ar: "الإحسان", en: "Excellence" },
-      { ar: "الانتماء", en: "Belonging" },
-      { ar: "التكافل", en: "Solidarity" },
-    ],
-    yearsOfExperience: "10",
-  },
+  about: DEFAULT_ABOUT,
   branding: {
     logoUrl: "/images/logo.png",
     logoMarkUrl: null,

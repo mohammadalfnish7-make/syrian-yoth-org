@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { AdminPageHeader } from "@/components/admin/AdminShell";
-import { Plus, Loader2, UserX, UserCheck } from "lucide-react";
+import { Plus, Loader2, UserX, UserCheck, Pencil } from "lucide-react";
 
 type Governorate = { id: string; nameAr: string };
 type GovAdmin = {
@@ -19,6 +19,7 @@ export default function AdminsPage() {
   const [governorates, setGovernorates] = useState<Governorate[]>([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
+  const [editingId, setEditingId] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState("");
   const [form, setForm] = useState({
@@ -26,6 +27,30 @@ export default function AdminsPage() {
     password: "",
     governorateId: "",
   });
+
+  function resetForm() {
+    setForm({ username: "", password: "", governorateId: "" });
+    setEditingId(null);
+    setShowForm(false);
+  }
+
+  function openCreateForm() {
+    setMessage("");
+    setForm({ username: "", password: "", governorateId: "" });
+    setEditingId(null);
+    setShowForm(true);
+  }
+
+  function openEditForm(admin: GovAdmin) {
+    setMessage("");
+    setForm({
+      username: admin.username,
+      password: "",
+      governorateId: admin.governorate?.id ?? "",
+    });
+    setEditingId(admin.id);
+    setShowForm(true);
+  }
 
   const loadData = useCallback(async () => {
     const [adminsRes, govRes] = await Promise.all([
@@ -43,25 +68,37 @@ export default function AdminsPage() {
     loadData();
   }, [loadData]);
 
-  async function handleCreate(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setSaving(true);
     setMessage("");
 
-    const res = await fetch("/api/admin/governorate-admins", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(form),
-    });
+    const payload = editingId
+      ? {
+          username: form.username,
+          governorateId: form.governorateId,
+          ...(form.password ? { password: form.password } : {}),
+        }
+      : form;
+
+    const res = await fetch(
+      editingId
+        ? `/api/admin/governorate-admins/${editingId}`
+        : "/api/admin/governorate-admins",
+      {
+        method: editingId ? "PUT" : "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      }
+    );
     const data = await res.json();
 
     if (res.ok) {
-      setMessage("تم إنشاء الحساب بنجاح");
-      setForm({ username: "", password: "", governorateId: "" });
-      setShowForm(false);
+      setMessage(editingId ? "تم تحديث الحساب بنجاح" : "تم إنشاء الحساب بنجاح");
+      resetForm();
       loadData();
     } else {
-      setMessage(data.error || "فشل الإنشاء");
+      setMessage(data.error || (editingId ? "فشل التحديث" : "فشل الإنشاء"));
     }
     setSaving(false);
   }
@@ -97,7 +134,7 @@ export default function AdminsPage() {
         <button
           type="button"
           className="admin-btn-primary"
-          onClick={() => setShowForm(!showForm)}
+          onClick={() => (showForm && !editingId ? resetForm() : openCreateForm())}
         >
           <Plus size={18} />
           إضافة أدمن محافظة
@@ -105,8 +142,10 @@ export default function AdminsPage() {
       </div>
 
       {showForm && (
-        <form onSubmit={handleCreate} className="admin-card admin-form-inline">
-          <h3 className="admin-card__title">حساب جديد</h3>
+        <form onSubmit={handleSubmit} className="admin-card admin-form-inline">
+          <h3 className="admin-card__title">
+            {editingId ? "تعديل الحساب" : "حساب جديد"}
+          </h3>
           <div className="admin-form-grid">
             <div className="admin-field">
               <label>اسم المستخدم</label>
@@ -124,8 +163,9 @@ export default function AdminsPage() {
                 className="admin-field__input admin-field__input--plain"
                 value={form.password}
                 onChange={(e) => setForm({ ...form, password: e.target.value })}
-                required
-                minLength={8}
+                required={!editingId}
+                minLength={form.password ? 8 : undefined}
+                placeholder={editingId ? "اتركها فارغة للإبقاء على الحالية" : undefined}
               />
             </div>
             <div className="admin-field">
@@ -149,13 +189,9 @@ export default function AdminsPage() {
           </div>
           <div className="admin-form-actions">
             <button type="submit" className="admin-btn-primary" disabled={saving}>
-              {saving ? "جاري الحفظ..." : "إنشاء"}
+              {saving ? "جاري الحفظ..." : editingId ? "حفظ التعديلات" : "إنشاء"}
             </button>
-            <button
-              type="button"
-              className="admin-btn-ghost"
-              onClick={() => setShowForm(false)}
-            >
+            <button type="button" className="admin-btn-ghost" onClick={resetForm}>
               إلغاء
             </button>
           </div>
@@ -205,7 +241,15 @@ export default function AdminsPage() {
                       ? new Date(admin.lastLogin).toLocaleDateString("ar-SY")
                       : "—"}
                   </td>
-                  <td>
+                  <td className="admin-table__actions">
+                    <button
+                      type="button"
+                      className="admin-btn-icon"
+                      onClick={() => openEditForm(admin)}
+                      title="تعديل"
+                    >
+                      <Pencil size={16} />
+                    </button>
                     <button
                       type="button"
                       className="admin-btn-icon"

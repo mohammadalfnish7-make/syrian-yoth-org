@@ -113,20 +113,18 @@ export default async function HomePageView() {
                 durationMs={1800}
               />
               <div className="about-highlight__label content-ar">
-                محافظات فيها حضور فاعل، ودمشق مركزاً
+                {settings.about.presenceLabel.ar}
               </div>
               <div className="about-highlight__label content-en">
-                Governorates with an active presence, Damascus as the hub
+                {settings.about.presenceLabel.en}
               </div>
             </div>
 
             <div className="about-content">
-              <span className="section-label content-ar">من نحن</span>
-              <span className="section-label content-en">Who We Are</span>
-              <h2 className="section-title content-ar">مؤسسة شبابية سورية بروح قيادية</h2>
-              <h2 className="section-title content-en">
-                A Syrian Youth Foundation with a Leadership Spirit
-              </h2>
+              <span className="section-label content-ar">{settings.about.label.ar}</span>
+              <span className="section-label content-en">{settings.about.label.en}</span>
+              <h2 className="section-title content-ar">{settings.about.title.ar}</h2>
+              <h2 className="section-title content-en">{settings.about.title.en}</h2>
               <p className="section-desc content-ar">{settings.about.mission.ar}</p>
               <p className="section-desc content-en">{settings.about.mission.en}</p>
 

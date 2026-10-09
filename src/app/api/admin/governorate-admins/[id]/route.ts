@@ -13,7 +13,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
 
   try {
     const body = await request.json();
-    const { password, governorateId, isActive } = body;
+    const { password, governorateId, isActive, username } = body;
 
     const admin = await prisma.admin.findUnique({ where: { id } });
     if (!admin || admin.role !== "GOVERNORATE_ADMIN") {
@@ -21,10 +21,30 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
     }
 
     const data: {
+      username?: string;
       passwordHash?: string;
       governorateId?: string;
       isActive?: boolean;
     } = {};
+
+    if (typeof username === "string") {
+      const rawUsername = username.trim();
+      if (!rawUsername) {
+        return apiError("اسم المستخدم مطلوب.");
+      }
+
+      const taken = await prisma.admin.findFirst({
+        where: {
+          username: { equals: rawUsername, mode: "insensitive" },
+          NOT: { id },
+        },
+      });
+      if (taken) {
+        return apiError("اسم المستخدم مستخدم مسبقاً.");
+      }
+
+      data.username = rawUsername.toLowerCase();
+    }
 
     if (password) {
       if (password.length < 8) {

@@ -14,10 +14,6 @@ function tryPlay(video: HTMLVideoElement) {
 }
 
 export function HeroVideoBackground({ videoUrl }: { videoUrl: string | null }) {
-  if (typeof window !== "undefined") {
-    const w = window as Window & { __heroRender?: number };
-    w.__heroRender = (w.__heroRender ?? 0) + 1;
-  }
   const videoRef = useRef<HTMLVideoElement>(null);
   const [videoReady, setVideoReady] = useState(false);
   const [allowVideo, setAllowVideo] = useState(true);
@@ -39,13 +35,9 @@ export function HeroVideoBackground({ videoUrl }: { videoUrl: string | null }) {
 
   useEffect(() => {
     const video = videoRef.current;
-    document.documentElement.dataset.heroEffect = video
-      ? `ready-${video.readyState}`
-      : "no-video";
     if (!video || !allowVideo || !videoUrl) return;
 
     setVideoReady(false);
-    video.dataset.bound = String(video.readyState);
 
     if (typeof window.matchMedia !== "function") {
       tryPlay(video);
