@@ -4,6 +4,7 @@ import { EventsList } from "@/components/EventsList";
 import { PageIntro } from "@/components/PageIntro";
 import { localeMetadata } from "@/lib/locale";
 import { getEvents } from "@/lib/public-content";
+import { getPublicSettings } from "@/lib/settings";
 
 export const dynamic = "force-dynamic";
 
@@ -13,10 +14,15 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
   const { locale } = await params;
+  const settings = await getPublicSettings();
+  const name = locale === "en" ? settings.branding.nameEn : settings.branding.nameAr;
   return localeMetadata({
     locale,
     title: "الفعاليات",
-    description: "فعاليات ومسارات مفتوحة لمؤسسة شباب سوريا، مع المدينة وطريقة التسجيل.",
+    description:
+      locale === "en"
+        ? `Open events and tracks from ${name}, with the city and how to register.`
+        : `فعاليات ومسارات مفتوحة لـ${name}، مع المدينة وطريقة التسجيل.`,
     path: "/events",
   });
 }

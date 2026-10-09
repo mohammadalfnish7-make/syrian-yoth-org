@@ -5,6 +5,7 @@ import { ImageUploader } from "@/components/admin/ImageUploader";
 import { VideoUploader } from "@/components/admin/VideoUploader";
 import { DEFAULT_ABOUT } from "@/lib/about-defaults";
 import { normalizeAboutSettings } from "@/lib/normalize-about";
+import { ORG_NAME } from "@/lib/profile-content";
 import { DEFAULT_HERO_VIDEO_URL, type AboutSettings } from "@/types/site";
 import { AdminPageHeader } from "@/components/admin/AdminShell";
 import { Loader2, Plus, Save, Trash2 } from "lucide-react";
@@ -31,6 +32,8 @@ type SiteSettings = {
     videoUrl: string | null;
   };
   branding: {
+    nameAr: string;
+    nameEn: string;
     logoUrl: string | null;
     logoMarkUrl: string | null;
     faviconUrl: string | null;
@@ -59,6 +62,14 @@ export default function AdminSettingsPage() {
             ...(data.hero ?? {}),
           },
           about: normalizeAboutSettings(data.about, DEFAULT_ABOUT),
+          branding: {
+            logoUrl: null,
+            logoMarkUrl: null,
+            faviconUrl: null,
+            ...(data.branding ?? {}),
+            nameAr: data.branding?.nameAr || ORG_NAME.ar,
+            nameEn: data.branding?.nameEn || ORG_NAME.en,
+          },
         });
         setLoading(false);
       })
@@ -131,6 +142,37 @@ export default function AdminSettingsPage() {
         {/* Branding / Logo */}
         <section className="admin-card">
           <h2 className="admin-card__title">الشعار والهوية البصرية</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+            <div>
+              <label className="block text-sm mb-1">اسم المؤسسة (عربي)</label>
+              <input
+                type="text"
+                value={settings.branding.nameAr}
+                onChange={(e) =>
+                  setSettings({
+                    ...settings,
+                    branding: { ...settings.branding, nameAr: e.target.value },
+                  })
+                }
+                className="w-full px-4 py-2 border border-brand-grey-2 rounded-md"
+              />
+            </div>
+            <div>
+              <label className="block text-sm mb-1">Organization name (English)</label>
+              <input
+                type="text"
+                value={settings.branding.nameEn}
+                onChange={(e) =>
+                  setSettings({
+                    ...settings,
+                    branding: { ...settings.branding, nameEn: e.target.value },
+                  })
+                }
+                className="w-full px-4 py-2 border border-brand-grey-2 rounded-md"
+                dir="ltr"
+              />
+            </div>
+          </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <ImageUploader
               category="logos"

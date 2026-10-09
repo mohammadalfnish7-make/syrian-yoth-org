@@ -1,20 +1,25 @@
 import type { Metadata } from "next";
 import { qomraArabic } from "@/lib/fonts";
+import { getPublicSettings } from "@/lib/settings";
 import "./globals.css";
 
-export const metadata: Metadata = {
-  title: {
-    default: "مؤسسة شباب سوريا | Syrian Youth Foundation",
-    template: "%s | مؤسسة شباب سوريا",
-  },
-  description:
-    "مؤسسة شباب سوريا — نصنع من طاقة الشباب قيادةً تبني، لا فعاليات تمر.",
-  keywords: ["شباب", "سوريا", "تطوع", "مؤسسة", "شباب سوريا"],
-  icons: {
-    icon: "/favicon.png",
-    apple: "/favicon.png",
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const settings = await getPublicSettings();
+  const { nameAr, nameEn } = settings.branding;
+
+  return {
+    title: {
+      default: `${nameAr} | ${nameEn}`,
+      template: `%s | ${nameAr}`,
+    },
+    description: `${nameAr} — نصنع من طاقة الشباب قيادةً تبني، لا فعاليات تمر.`,
+    keywords: [nameAr, nameEn, "شباب", "سوريا", "تطوع"],
+    icons: {
+      icon: settings.branding.faviconUrl || "/favicon.png",
+      apple: settings.branding.faviconUrl || "/favicon.png",
+    },
+  };
+}
 
 export default function RootLayout({
   children,

@@ -31,9 +31,9 @@ export function SiteFooter({ settings }: SiteFooterProps) {
         <div className="footer__grid">
           <div className="footer__brand">
             <div className="site-brand">
-              <span className="site-brand__name content-ar">مؤسسة شباب سوريا</span>
+              <span className="site-brand__name content-ar">{settings.branding.nameAr}</span>
               <span className="site-brand__name content-en">
-                Syrian Youth Foundation
+                {settings.branding.nameEn}
               </span>
             </div>
             <p className="footer__desc content-ar">
@@ -117,10 +117,10 @@ export function SiteFooter({ settings }: SiteFooterProps) {
 
         <div className="footer__bottom">
           <p className="content-ar">
-            © {new Date().getFullYear()} مؤسسة شباب سوريا. جميع الحقوق محفوظة.
+            © {new Date().getFullYear()} {settings.branding.nameAr}. جميع الحقوق محفوظة.
           </p>
           <p className="content-en">
-            © {new Date().getFullYear()} Syrian Youth Foundation. All rights
+            © {new Date().getFullYear()} {settings.branding.nameEn}. All rights
             reserved.
           </p>
           <nav className="footer__legal" aria-label="Legal">

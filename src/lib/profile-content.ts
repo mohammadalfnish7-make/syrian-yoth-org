@@ -1,3 +1,8 @@
+export const ORG_NAME = {
+  ar: "المؤسسة الشبابية السورية",
+  en: "The Syrian Youth Foundation",
+};
+
 export const PROFILE_MISSION = {
   ar: "تمكين الشباب السوري فكرياً وثقافياً وقيادياً، وبناء قدراتهم، وتوسيع مشاركتهم في الشأن العام، ليكونوا شركاء فاعلين في بناء سوريا.",
   en: "To empower Syrian youth intellectually, culturally, and in leadership; to build their capacities; and to expand their participation in public affairs, so they become active partners in building Syria.",
@@ -14,7 +19,7 @@ export const PROFILE_SLOGAN = {
 };
 
 export const PROFILE_STORY = {
-  ar: "في لحظة فارقة من عمر سوريا، لم يكن السؤال: ماذا حدث؟ بل: ماذا بعد؟ ومن هذا السؤال وُلدت مؤسسة الشباب السوري. لم نبدأ من مكتب فخم، بدأنا من قناعة أن في الشاب السوري طاقة تنتظر من يفتح لها الباب. جمعنا الشباب ليكون لهذا الجيل بيت يحتضنه، ومساحة يكبر فيها، وصوت يُسمع. امتد العمل من دمشق إلى حلب، ومن الساحل إلى الجزيرة، حتى صارت شبكة تنهض في عشر محافظات. آمنا أن الشباب ليسوا مشكلة تُدار، بل طاقة تُوجَّه، وأنهم حاضر يصنع الآن. فلم نعلّمهم ماذا يفكرون، بل كيف يفكرون. نحن وعد لهذا الجيل: أن نمضي معه من اليافعة إلى القيادة، ومن الحلم إلى الأثر، ومن الانتماء إلى البناء.",
+  ar: "في لحظة فارقة من عمر سوريا، لم يكن السؤال: ماذا حدث؟ بل: ماذا بعد؟ ومن هذا السؤال وُلدت المؤسسة الشبابية السورية. لم نبدأ من مكتب فخم، بدأنا من قناعة أن في الشاب السوري طاقة تنتظر من يفتح لها الباب. جمعنا الشباب ليكون لهذا الجيل بيت يحتضنه، ومساحة يكبر فيها، وصوت يُسمع. امتد العمل من دمشق إلى حلب، ومن الساحل إلى الجزيرة، حتى صارت شبكة تنهض في عشر محافظات. آمنا أن الشباب ليسوا مشكلة تُدار، بل طاقة تُوجَّه، وأنهم حاضر يصنع الآن. فلم نعلّمهم ماذا يفكرون، بل كيف يفكرون. نحن وعد لهذا الجيل: أن نمضي معه من اليافعة إلى القيادة، ومن الحلم إلى الأثر، ومن الانتماء إلى البناء.",
   en: "At a turning point in Syria's life, the question was not what happened, but what comes next. From that question the Syrian Youth Foundation was born. We did not start from a grand office. We started from the conviction that Syrian youth hold energy waiting for a door to open. We gathered young people so this generation would have a home, room to grow, and a voice that is heard. The work spread from Damascus to Aleppo, and from the coast to the Jazira, until it became a network across ten governorates. We believe youth are not a problem to be managed, but energy to be directed — a present that is being made now. We do not teach them what to think. We teach them how to think. We are a promise to walk with this generation from adolescence to leadership, from dream to impact, and from belonging to building.",
 };
 

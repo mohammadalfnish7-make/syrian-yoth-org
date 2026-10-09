@@ -4,6 +4,7 @@ import { DEFAULT_ABOUT } from "../src/lib/about-defaults";
 import { DEFAULT_HERO_VIDEO_URL } from "../src/types/site";
 import {
   FALLBACK_EVENTS,
+  ORG_NAME,
   PROFILE_FOCUS_AREAS,
   PROFILE_IMPACT_STATS,
   PROFILE_PROGRAMS,
@@ -82,6 +83,8 @@ const DEFAULT_SITE_SETTINGS = [
   {
     key: "branding",
     value: {
+      nameAr: ORG_NAME.ar,
+      nameEn: ORG_NAME.en,
       logoUrl: "/images/logo.png",
       logoMarkUrl: null,
       faviconUrl: "/favicon.png",

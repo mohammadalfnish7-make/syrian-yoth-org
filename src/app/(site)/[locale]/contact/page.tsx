@@ -13,10 +13,15 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
   const { locale } = await params;
+  const settings = await getPublicSettings();
+  const name = locale === "en" ? settings.branding.nameEn : settings.branding.nameAr;
   return localeMetadata({
     locale,
     title: "تواصل",
-    description: "البريد والهاتف وواتساب مؤسسة شباب سوريا في دمشق.",
+    description:
+      locale === "en"
+        ? `Email, phone, and WhatsApp for ${name} in Damascus.`
+        : `البريد والهاتف وواتساب ${name} في دمشق.`,
     path: "/contact",
   });
 }

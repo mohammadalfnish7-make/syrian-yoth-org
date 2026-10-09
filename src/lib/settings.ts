@@ -1,6 +1,6 @@
 import { DEFAULT_ABOUT } from "@/lib/about-defaults";
 import { normalizeAboutSettings } from "@/lib/normalize-about";
-import { PROFILE_MISSION, PROFILE_VISION } from "@/lib/profile-content";
+import { ORG_NAME, PROFILE_MISSION, PROFILE_VISION } from "@/lib/profile-content";
 import { prisma } from "@/lib/prisma";
 import {
   DEFAULT_HERO_VIDEO_URL,
@@ -34,6 +34,8 @@ const DEFAULT_SETTINGS: PublicSettings = {
   },
   about: DEFAULT_ABOUT,
   branding: {
+    nameAr: ORG_NAME.ar,
+    nameEn: ORG_NAME.en,
     logoUrl: "/images/logo.png",
     logoMarkUrl: null,
     faviconUrl: "/favicon.png",
@@ -74,12 +76,16 @@ export async function getPublicSettings(): Promise<PublicSettings> {
         case "about":
           merged.about = normalizeAboutSettings(setting.value, merged.about);
           break;
-        case "branding":
+        case "branding": {
+          const stored = setting.value as Partial<BrandingSettings>;
           merged.branding = {
             ...merged.branding,
-            ...(setting.value as BrandingSettings),
+            ...stored,
+            nameAr: stored.nameAr || merged.branding.nameAr,
+            nameEn: stored.nameEn || merged.branding.nameEn,
           };
           break;
+        }
       }
     }
 

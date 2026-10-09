@@ -1,6 +1,7 @@
 import { LangSwitch } from "@/components/LangSwitch";
 import { LocaleLink } from "@/components/LocaleLink";
 import { DEFAULT_ABOUT } from "@/lib/about-defaults";
+import { ORG_NAME } from "@/lib/profile-content";
 import type { PublicSettings } from "@/types/site";
 
 const NAV_LINKS = [
@@ -13,23 +14,23 @@ const NAV_LINKS = [
 
 export function SiteHeader({ settings }: { settings?: PublicSettings }) {
   const aboutLabel = settings?.about.label ?? DEFAULT_ABOUT.label;
+  const nameAr = settings?.branding.nameAr || ORG_NAME.ar;
+  const nameEn = settings?.branding.nameEn || ORG_NAME.en;
 
   return (
     <header className="site-header">
       <div className="container-yaf header__inner">
         <LocaleLink href="/" className="site-brand">
           {settings?.branding?.logoUrl ? (
-            <img src={settings.branding.logoUrl} alt="مؤسسة شباب سوريا" className="h-16 w-auto object-contain" />
+            <img src={settings.branding.logoUrl} alt="" className="h-16 w-auto object-contain" />
           ) : (
             <>
-              <span className="site-brand__name content-ar">مؤسسة شباب سوريا</span>
-              <span className="site-brand__name content-en">
-                Syrian Youth Foundation
-              </span>
               <span className="site-brand__tag content-ar">سوريا</span>
               <span className="site-brand__tag content-en">Syria</span>
             </>
           )}
+          <span className="site-brand__name content-ar">{nameAr}</span>
+          <span className="site-brand__name content-en">{nameEn}</span>
         </LocaleLink>
 
         <label htmlFor="nav-open" id="nav-open-label" className="nav-toggle-btn">

@@ -11,6 +11,7 @@ import { LogoutButton } from "./LogoutButton";
 
 type AdminShellProps = {
   children: React.ReactNode;
+  orgName: { ar: string; en: string };
   session: {
     username: string;
     role: AdminRole;
@@ -23,7 +24,7 @@ function syncAdminLang(isEnglish: boolean) {
   document.documentElement.dir = isEnglish ? "ltr" : "rtl";
 }
 
-export function AdminShell({ children, session }: AdminShellProps) {
+export function AdminShell({ children, orgName, session }: AdminShellProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const pathname = usePathname();
   const navItems = getNavItemsForRole(session.role);
@@ -83,14 +84,14 @@ export function AdminShell({ children, session }: AdminShellProps) {
             <Link href="/admin/dashboard" className="admin-shell__brand">
               <Image
                 src="/images/logo.png"
-                alt="Syrian Youth Foundation"
+                alt={orgName.en}
                 width={36}
                 height={36}
                 className="admin-shell__brand-logo"
               />
               <div>
-                <span className="admin-shell__brand-name content-ar">شباب سوريا</span>
-                <span className="admin-shell__brand-name content-en">Syrian Youth</span>
+                <span className="admin-shell__brand-name content-ar">{orgName.ar}</span>
+                <span className="admin-shell__brand-name content-en">{orgName.en}</span>
                 <span className="admin-shell__brand-sub content-ar">لوحة التحكم</span>
                 <span className="admin-shell__brand-sub content-en">Admin Panel</span>
               </div>

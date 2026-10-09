@@ -3,6 +3,7 @@ import { LocaleLink } from "@/components/LocaleLink";
 import { PageIntro } from "@/components/PageIntro";
 import { localeMetadata } from "@/lib/locale";
 import { getPublishedNews } from "@/lib/public-content";
+import { getPublicSettings } from "@/lib/settings";
 
 export const dynamic = "force-dynamic";
 
@@ -12,10 +13,15 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
   const { locale } = await params;
+  const settings = await getPublicSettings();
+  const name = locale === "en" ? settings.branding.nameEn : settings.branding.nameAr;
   return localeMetadata({
     locale,
     title: "الأخبار",
-    description: "قصص من فروع مؤسسة شباب سوريا، لكل خبر رابط يمكن إرساله.",
+    description:
+      locale === "en"
+        ? `Stories from ${name} branches, each with a link you can share.`
+        : `قصص من فروع ${name}، لكل خبر رابط يمكن إرساله.`,
     path: "/news",
   });
 }

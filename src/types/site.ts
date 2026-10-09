@@ -1,4 +1,6 @@
 export type BrandingSettings = {
+  nameAr: string;
+  nameEn: string;
   logoUrl: string | null;
   logoMarkUrl: string | null;
   faviconUrl: string | null;

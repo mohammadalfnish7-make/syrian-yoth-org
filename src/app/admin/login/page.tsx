@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { User, Lock, Loader2 } from "lucide-react";
+import { ORG_NAME } from "@/lib/profile-content";
 
 export default function AdminLoginPage() {
   const router = useRouter();
@@ -11,6 +12,23 @@ export default function AdminLoginPage() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [orgName, setOrgName] = useState(ORG_NAME);
+
+  useEffect(() => {
+    fetch("/api/public/settings")
+      .then((res) => res.json())
+      .then((data) => {
+        const nameAr = data?.branding?.nameAr;
+        const nameEn = data?.branding?.nameEn;
+        if (typeof nameAr === "string" && nameAr.trim()) {
+          setOrgName((current) => ({ ...current, ar: nameAr }));
+        }
+        if (typeof nameEn === "string" && nameEn.trim()) {
+          setOrgName((current) => ({ ...current, en: nameEn }));
+        }
+      })
+      .catch(() => undefined);
+  }, []);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -47,13 +65,16 @@ export default function AdminLoginPage() {
         <div className="admin-login__brand-content">
           <Image
             src="/images/logo.png"
-            alt="مؤسسة شباب سوريا"
+            alt={orgName.ar}
             width={80}
             height={80}
             className="admin-login__logo"
             priority
           />
-          <h1 className="admin-login__brand-title">مؤسسة شباب سوريا</h1>
+          <h1 className="admin-login__brand-title">{orgName.ar}</h1>
+          <p className="admin-login__brand-tagline" dir="ltr">
+            {orgName.en}
+          </p>
           <p className="admin-login__brand-tagline">
             جيلٌ شابٌ متمكنٌ وقوي
           </p>

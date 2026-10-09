@@ -81,6 +81,8 @@ export const adminSettingsSchema = z
       .optional(),
     branding: z
       .object({
+        nameAr: z.string().max(200).optional(),
+        nameEn: z.string().max(200).optional(),
         logoUrl: urlOrPath.nullable(),
         logoMarkUrl: urlOrPath.nullable(),
         faviconUrl: urlOrPath.nullable(),

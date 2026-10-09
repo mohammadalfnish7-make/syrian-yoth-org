@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import { getVerifiedSession } from "@/lib/auth";
+import { getPublicSettings } from "@/lib/settings";
 import { AdminShell } from "@/components/admin/AdminShell";
 
 export default async function AdminPanelLayout({
@@ -12,8 +13,11 @@ export default async function AdminPanelLayout({
     redirect("/admin/login");
   }
 
+  const settings = await getPublicSettings();
+
   return (
     <AdminShell
+      orgName={{ ar: settings.branding.nameAr, en: settings.branding.nameEn }}
       session={{
         username: session.username,
         role: session.role,
