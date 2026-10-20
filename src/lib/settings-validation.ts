@@ -77,6 +77,27 @@ export const adminSettingsSchema = z
           )
           .max(20),
         yearsOfExperience: z.string().max(20).optional(),
+        founderMessage: z
+          .object({
+            label: z.object({
+              ar: z.string().max(200),
+              en: z.string().max(200),
+            }),
+            body: z.object({
+              ar: z.string().max(5000),
+              en: z.string().max(5000),
+            }),
+            name: z.object({
+              ar: z.string().max(200),
+              en: z.string().max(200),
+            }),
+            role: z.object({
+              ar: z.string().max(300),
+              en: z.string().max(300),
+            }),
+            imageUrl: urlOrPath.nullable(),
+          })
+          .optional(),
       })
       .optional(),
     branding: z

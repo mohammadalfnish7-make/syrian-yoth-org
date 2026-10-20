@@ -295,6 +295,234 @@ export default function AdminSettingsPage() {
           </div>
         </section>
 
+        {/* Founder Message */}
+        <section className="admin-card">
+          <h2 className="admin-card__title">كلمة المؤسس</h2>
+          <div className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm mb-1">عنوان القسم (عربي)</label>
+                <input
+                  type="text"
+                  value={settings.about.founderMessage.label.ar}
+                  onChange={(e) =>
+                    setSettings({
+                      ...settings,
+                      about: {
+                        ...settings.about,
+                        founderMessage: {
+                          ...settings.about.founderMessage,
+                          label: {
+                            ...settings.about.founderMessage.label,
+                            ar: e.target.value,
+                          },
+                        },
+                      },
+                    })
+                  }
+                  className="w-full px-4 py-2 border border-brand-grey-2 rounded-md"
+                />
+              </div>
+              <div>
+                <label className="block text-sm mb-1">Section title (English)</label>
+                <input
+                  type="text"
+                  value={settings.about.founderMessage.label.en}
+                  onChange={(e) =>
+                    setSettings({
+                      ...settings,
+                      about: {
+                        ...settings.about,
+                        founderMessage: {
+                          ...settings.about.founderMessage,
+                          label: {
+                            ...settings.about.founderMessage.label,
+                            en: e.target.value,
+                          },
+                        },
+                      },
+                    })
+                  }
+                  className="w-full px-4 py-2 border border-brand-grey-2 rounded-md"
+                  dir="ltr"
+                />
+              </div>
+            </div>
+            <div>
+              <label className="block text-sm mb-1">نص الكلمة (عربي)</label>
+              <textarea
+                value={settings.about.founderMessage.body.ar}
+                onChange={(e) =>
+                  setSettings({
+                    ...settings,
+                    about: {
+                      ...settings.about,
+                      founderMessage: {
+                        ...settings.about.founderMessage,
+                        body: {
+                          ...settings.about.founderMessage.body,
+                          ar: e.target.value,
+                        },
+                      },
+                    },
+                  })
+                }
+                rows={8}
+                className="w-full px-4 py-2 border border-brand-grey-2 rounded-md"
+              />
+            </div>
+            <div>
+              <label className="block text-sm mb-1">Message (English)</label>
+              <textarea
+                value={settings.about.founderMessage.body.en}
+                onChange={(e) =>
+                  setSettings({
+                    ...settings,
+                    about: {
+                      ...settings.about,
+                      founderMessage: {
+                        ...settings.about.founderMessage,
+                        body: {
+                          ...settings.about.founderMessage.body,
+                          en: e.target.value,
+                        },
+                      },
+                    },
+                  })
+                }
+                rows={8}
+                className="w-full px-4 py-2 border border-brand-grey-2 rounded-md"
+                dir="ltr"
+              />
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm mb-1">اسم المؤسس (عربي)</label>
+                <input
+                  type="text"
+                  value={settings.about.founderMessage.name.ar}
+                  onChange={(e) =>
+                    setSettings({
+                      ...settings,
+                      about: {
+                        ...settings.about,
+                        founderMessage: {
+                          ...settings.about.founderMessage,
+                          name: {
+                            ...settings.about.founderMessage.name,
+                            ar: e.target.value,
+                          },
+                        },
+                      },
+                    })
+                  }
+                  className="w-full px-4 py-2 border border-brand-grey-2 rounded-md"
+                />
+              </div>
+              <div>
+                <label className="block text-sm mb-1">Founder name (English)</label>
+                <input
+                  type="text"
+                  value={settings.about.founderMessage.name.en}
+                  onChange={(e) =>
+                    setSettings({
+                      ...settings,
+                      about: {
+                        ...settings.about,
+                        founderMessage: {
+                          ...settings.about.founderMessage,
+                          name: {
+                            ...settings.about.founderMessage.name,
+                            en: e.target.value,
+                          },
+                        },
+                      },
+                    })
+                  }
+                  className="w-full px-4 py-2 border border-brand-grey-2 rounded-md"
+                  dir="ltr"
+                />
+              </div>
+              <div>
+                <label className="block text-sm mb-1">الصفة (عربي)</label>
+                <input
+                  type="text"
+                  value={settings.about.founderMessage.role.ar}
+                  onChange={(e) =>
+                    setSettings({
+                      ...settings,
+                      about: {
+                        ...settings.about,
+                        founderMessage: {
+                          ...settings.about.founderMessage,
+                          role: {
+                            ...settings.about.founderMessage.role,
+                            ar: e.target.value,
+                          },
+                        },
+                      },
+                    })
+                  }
+                  className="w-full px-4 py-2 border border-brand-grey-2 rounded-md"
+                />
+              </div>
+              <div>
+                <label className="block text-sm mb-1">Title (English)</label>
+                <input
+                  type="text"
+                  value={settings.about.founderMessage.role.en}
+                  onChange={(e) =>
+                    setSettings({
+                      ...settings,
+                      about: {
+                        ...settings.about,
+                        founderMessage: {
+                          ...settings.about.founderMessage,
+                          role: {
+                            ...settings.about.founderMessage.role,
+                            en: e.target.value,
+                          },
+                        },
+                      },
+                    })
+                  }
+                  className="w-full px-4 py-2 border border-brand-grey-2 rounded-md"
+                  dir="ltr"
+                />
+              </div>
+            </div>
+            <ImageUploader
+              category="managers"
+              label="صورة المؤسس"
+              currentUrl={settings.about.founderMessage.imageUrl}
+              onUpload={(url) =>
+                setSettings({
+                  ...settings,
+                  about: {
+                    ...settings.about,
+                    founderMessage: {
+                      ...settings.about.founderMessage,
+                      imageUrl: url,
+                    },
+                  },
+                })
+              }
+              onRemove={() =>
+                setSettings({
+                  ...settings,
+                  about: {
+                    ...settings.about,
+                    founderMessage: {
+                      ...settings.about.founderMessage,
+                      imageUrl: null,
+                    },
+                  },
+                })
+              }
+            />
+          </div>
+        </section>
+
         {/* About Info */}
         <section className="admin-card">
           <h2 className="admin-card__title">معلومات من نحن</h2>

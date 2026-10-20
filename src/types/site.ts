@@ -36,6 +36,14 @@ export type BilingualText = {
   en: string;
 };
 
+export type FounderMessageSettings = {
+  label: BilingualText;
+  body: BilingualText;
+  name: BilingualText;
+  role: BilingualText;
+  imageUrl: string | null;
+};
+
 export type AboutSettings = {
   label: BilingualText;
   title: BilingualText;
@@ -44,6 +52,7 @@ export type AboutSettings = {
   presenceLabel: BilingualText;
   values: BilingualText[];
   yearsOfExperience: string;
+  founderMessage: FounderMessageSettings;
 };
 
 export type PublicSettings = {

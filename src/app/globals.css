@@ -3295,6 +3295,80 @@ body:has(#lang-en:checked) .gov-news__track {
   line-height: 1.7;
 }
 
+.founder-message {
+  max-width: 46rem;
+}
+
+.founder-message__label {
+  margin: 0 0 1.25rem;
+  font-size: var(--font-size-h3);
+  color: var(--color-brand-purple);
+}
+
+.founder-message__layout {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.founder-message__portrait {
+  position: relative;
+  width: 160px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+  background: var(--color-brand-grey-1);
+}
+
+.founder-message__image {
+  object-fit: cover;
+}
+
+.founder-message__quote {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  border: none;
+  padding: 0;
+}
+
+.founder-message__quote p {
+  margin: 0;
+  line-height: 1.85;
+}
+
+.founder-message__signoff {
+  margin-top: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.founder-message__name {
+  font-style: normal;
+  font-weight: 700;
+  font-size: var(--font-size-h4);
+}
+
+.founder-message__role {
+  color: color-mix(in srgb, var(--color-brand-black) 65%, transparent);
+  font-size: var(--font-size-caption);
+}
+
+@media (min-width: 720px) {
+  .founder-message__layout {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 2rem;
+  }
+
+  .founder-message__portrait {
+    width: 200px;
+  }
+}
+
 .legal-copy {
   max-width: 46rem;
   display: flex;

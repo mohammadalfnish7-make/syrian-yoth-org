@@ -1,4 +1,8 @@
-import type { AboutSettings, BilingualText } from "@/types/site";
+import type {
+  AboutSettings,
+  BilingualText,
+  FounderMessageSettings,
+} from "@/types/site";
 
 function isBilingualText(value: unknown): value is BilingualText {
   return (
@@ -30,6 +34,31 @@ function normalizeBilingualValue(
     return { ar: value.ar, en: value.en };
   }
   return fallback;
+}
+
+function normalizeFounderMessage(
+  value: unknown,
+  fallback: FounderMessageSettings
+): FounderMessageSettings {
+  if (!value || typeof value !== "object") {
+    return fallback;
+  }
+
+  const data = value as Record<string, unknown>;
+  const imageUrl =
+    typeof data.imageUrl === "string"
+      ? data.imageUrl
+      : data.imageUrl === null
+        ? null
+        : fallback.imageUrl;
+
+  return {
+    label: normalizeBilingualValue(data.label, fallback.label),
+    body: normalizeBilingualValue(data.body, fallback.body),
+    name: normalizeBilingualValue(data.name, fallback.name),
+    role: normalizeBilingualValue(data.role, fallback.role),
+    imageUrl,
+  };
 }
 
 /** Supports legacy DB rows where mission/vision were plain strings and values were string[]. */
@@ -65,6 +94,19 @@ export function normalizeAboutSettings(
     data.presenceLabel,
     defaults.presenceLabel
   );
+  const founderMessage = normalizeFounderMessage(
+    data.founderMessage,
+    defaults.founderMessage
+  );
 
-  return { label, title, mission, vision, presenceLabel, values, yearsOfExperience };
+  return {
+    label,
+    title,
+    mission,
+    vision,
+    presenceLabel,
+    values,
+    yearsOfExperience,
+    founderMessage,
+  };
 }

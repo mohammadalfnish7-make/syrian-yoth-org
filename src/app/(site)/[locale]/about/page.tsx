@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { FounderMessageSection } from "@/components/FounderMessageSection";
 import { PageIntro } from "@/components/PageIntro";
 import { localeMetadata } from "@/lib/locale";
 import {
@@ -42,8 +43,11 @@ export default async function AboutPage() {
         ledeAr={PROFILE_SLOGAN.ar}
         ledeEn={PROFILE_SLOGAN.en}
       />
+      <FounderMessageSection message={settings.about.founderMessage} />
       <section className="section">
         <div className="container-yaf legal-copy">
+          <h2 className="content-ar">الحكاية</h2>
+          <h2 className="content-en">The Story</h2>
           <p className="content-ar">{PROFILE_STORY.ar}</p>
           <p className="content-en">{PROFILE_STORY.en}</p>
 

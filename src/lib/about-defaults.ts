@@ -1,4 +1,8 @@
-import { PROFILE_MISSION, PROFILE_VISION } from "./profile-content";
+import {
+  PROFILE_FOUNDER_MESSAGE,
+  PROFILE_MISSION,
+  PROFILE_VISION,
+} from "./profile-content";
 import type { AboutSettings } from "../types/site";
 
 export const DEFAULT_ABOUT: AboutSettings = {
@@ -23,4 +27,8 @@ export const DEFAULT_ABOUT: AboutSettings = {
     { ar: "التكافل", en: "Solidarity" },
   ],
   yearsOfExperience: "10",
+  founderMessage: {
+    ...PROFILE_FOUNDER_MESSAGE,
+    imageUrl: null,
+  },
 };
