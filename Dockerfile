@@ -5,7 +5,8 @@ FROM base AS deps
 WORKDIR /app
 COPY package.json package-lock.json* ./
 COPY prisma ./prisma
-RUN npm ci
+# Always install prisma/tsx even if Coolify injects NODE_ENV=production.
+RUN npm ci --include=dev
 
 FROM base AS builder
 WORKDIR /app
@@ -13,6 +14,18 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 RUN npx prisma generate
 RUN npm run build
+
+# Lightweight migrate image — no Next.js build required
+FROM base AS migrate
+WORKDIR /app
+ENV NODE_ENV=production
+COPY --from=deps /app/node_modules ./node_modules
+COPY package.json package-lock.json* ./
+COPY prisma ./prisma
+COPY scripts ./scripts
+RUN npx prisma generate \
+  && chmod +x /app/scripts/db-migrate.sh
+CMD ["sh", "/app/scripts/db-migrate.sh"]
 
 FROM base AS runner
 WORKDIR /app

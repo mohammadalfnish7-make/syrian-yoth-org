@@ -18,14 +18,15 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-      target: builder
+      target: migrate
     environment:
       DATABASE_URL: postgresql://${POSTGRES_USER:-yaf}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB:-yaf_db}?schema=public
       SEED_ADMIN_USERNAME: ${SEED_ADMIN_USERNAME:-admin}
       SEED_ADMIN_PASSWORD: ${SEED_ADMIN_PASSWORD:?SEED_ADMIN_PASSWORD must be set}
       NODE_ENV: production
-    # Safe migrate: no global --accept-data-loss; may recreate volunteer_requests only if schema is incompatible.
-    command: sh scripts/db-migrate.sh
+    # Safe migrate: may drop volunteer_requests only if old shape blocks schema push.
+    command: ["sh", "/app/scripts/db-migrate.sh"]
+    working_dir: /app
     depends_on:
       db:
         condition: service_healthy
