@@ -5,7 +5,7 @@ import { InvolveCardIcon } from "@/components/InvolveCardIcon";
 import { RequestModal } from "@/components/RequestModal";
 import type { InvolveCard, InvolveCardIconKey } from "@/lib/site-content";
 
-type Governorate = { id: string; nameAr: string };
+type Governorate = { id: string; nameAr: string; nameEn?: string | null };
 
 type Props = {
   cards: InvolveCard[];

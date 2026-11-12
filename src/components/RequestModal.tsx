@@ -1,12 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { usePathname } from "next/navigation";
 import { Loader2, X } from "lucide-react";
 import { INVOLVE_CARDS, type InvolveCardIconKey } from "@/lib/site-content";
 import { LocaleLink } from "@/components/LocaleLink";
+import { localeFromPath } from "@/lib/locale";
 import { VolunteerRequestForm } from "@/components/VolunteerRequestForm";
 
-type Governorate = { id: string; nameAr: string };
+type Governorate = { id: string; nameAr: string; nameEn?: string | null };
 
 type RequestModalProps = {
   isOpen: boolean;
@@ -26,6 +28,35 @@ export function RequestModal({
   const [submitting, setSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState("");
+  const volunteerDirty = useRef(false);
+  const locale = localeFromPath(usePathname() || "/ar");
+
+  function requestClose() {
+    if (type === "volunteer" && volunteerDirty.current && !success) {
+      const ok = window.confirm(
+        locale === "en"
+          ? "Close the form? The information you entered will be lost."
+          : "هل تريد إغلاق النموذج؟ ستفقد البيانات التي أدخلتها."
+      );
+      if (!ok) return;
+    }
+    volunteerDirty.current = false;
+    setError("");
+    setSuccess(false);
+    onClose();
+  }
+
+  const closeRef = useRef(requestClose);
+  closeRef.current = requestClose;
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") closeRef.current();
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [isOpen]);
 
   if (!isOpen || !type) return null;
 
@@ -109,18 +140,23 @@ export function RequestModal({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
       <div
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="request-modal-title"
         className={`bg-white rounded-lg shadow-xl w-full relative overflow-hidden flex flex-col max-h-[90vh] ${
-          isVolunteer ? "max-w-2xl" : "max-w-md"
+          isVolunteer ? "max-w-3xl" : "max-w-md"
         }`}
       >
         <div className="flex items-center justify-between p-4 border-b border-gray-100">
           <div>
-            <h2 className="text-xl font-bold text-gray-900 content-ar">{titleAr}</h2>
-            <h2 className="text-xl font-bold text-gray-900 content-en">{titleEn}</h2>
+            <h2 id="request-modal-title" className="text-xl font-bold text-gray-900">
+              {locale === "en" ? titleEn : titleAr}
+            </h2>
           </div>
           <button
             type="button"
-            onClick={onClose}
+            onClick={requestClose}
+            aria-label={locale === "en" ? "Close" : "إغلاق"}
             className="text-gray-400 hover:text-gray-600 transition-colors"
           >
             <X size={24} />
@@ -141,7 +177,7 @@ export function RequestModal({
                   <p className="content-en" style={{ color: "#064e3b", marginTop: "0.75rem" }}>{nextStep.nextStep.en}</p>
                 </>
               ) : null}
-              <button type="button" onClick={onClose} className="btn-primary" style={{ marginTop: "1.25rem" }}>
+              <button type="button" onClick={requestClose} className="btn-primary" style={{ marginTop: "1.25rem" }}>
                 <span className="content-ar">حسناً</span>
                 <span className="content-en">Done</span>
               </button>
@@ -152,6 +188,9 @@ export function RequestModal({
               onSubmit={handleVolunteerSubmit}
               submitting={submitting}
               error={error}
+              onDirtyChange={(dirty) => {
+                volunteerDirty.current = dirty;
+              }}
             />
           ) : (
             <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
