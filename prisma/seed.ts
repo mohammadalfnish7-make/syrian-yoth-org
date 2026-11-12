@@ -148,12 +148,17 @@ async function main() {
   }
 }
 
-const isDirectRun =
-  typeof process !== "undefined" &&
-  process.argv[1] &&
-  (process.argv[1].endsWith("seed.ts") || process.argv[1].endsWith("seed.js"));
+const ranViaCli = process.argv.some((arg) => {
+  const normalized = arg.replace(/\\/g, "/");
+  return (
+    normalized.endsWith("/prisma/seed.ts") ||
+    normalized.endsWith("/prisma/seed.js") ||
+    normalized === "prisma/seed.ts" ||
+    normalized === "prisma/seed.js"
+  );
+});
 
-if (isDirectRun) {
+if (ranViaCli) {
   main().catch((e) => {
     console.error(e);
     process.exit(1);
