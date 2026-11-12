@@ -183,14 +183,32 @@ model BoardMember {
 }
 
 model VolunteerRequest {
-  id            String        @id @default(cuid())
-  fullName      String        @map("full_name")
-  phone         String
-  email         String?
-  governorateId String        @map("governorate_id")
-  message       String?       @db.Text
-  status        RequestStatus @default(new)
-  submittedAt   DateTime      @default(now()) @map("submitted_at")
+  id                 String        @id @default(cuid())
+  fullName           String        @map("full_name")
+  gender             String
+  dateOfBirth        DateTime      @map("date_of_birth") @db.Date
+  governorateId      String        @map("governorate_id")
+  address            String
+  phone              String
+  telegram           String
+  hasLinkedIn        Boolean       @map("has_linkedin")
+  employmentStatus   String        @map("employment_status")
+  workplacePosition  String?       @map("workplace_position")
+  educationLevel     String        @map("education_level")
+  educationLevelOther String?      @map("education_level_other")
+  university         String
+  college            String
+  studyYear          String        @map("study_year")
+  studyYearOther     String?       @map("study_year_other")
+  hobbies            Json
+  hobbiesOther       String?       @map("hobbies_other")
+  idDocumentUrl      String        @map("id_document_url")
+  personalPhotoUrl   String        @map("personal_photo_url")
+  cvUrl              String        @map("cv_url")
+  email              String?
+  message            String?       @db.Text
+  status             RequestStatus @default(new)
+  submittedAt        DateTime      @default(now()) @map("submitted_at")
 
   governorate Governorate @relation(fields: [governorateId], references: [id])
 

@@ -28,10 +28,10 @@ export default function PrivacyPage() {
       <section className="section">
         <div className="container-yaf legal-copy">
           <p className="content-ar">
-            نماذج التطوع والبرامج والمبادرات والشراكة تطلب الاسم ورقم الهاتف، وقد تطلب البريد والمحافظة أو فكرة المبادرة. نستخدم هذه البيانات للرد على الطلب ومتابعته داخل الفريق المختص. لا نبيعها، ولا نستخدمها لإعلان تجاري.
+            نماذج البرامج والمبادرات والشراكة تطلب الاسم ورقم الهاتف، وقد تطلب البريد أو فكرة المبادرة. نموذج التطوع الموحّد يطلب بيانات شخصية وتعليمية ووظيفية، ومعرّفات تواصل، ووثائق (هوية، صورة شخصية، سيرة ذاتية). نستخدم هذه البيانات للرد على الطلب ومتابعته داخل الفريق المختص. لا نبيعها، ولا نستخدمها لإعلان تجاري.
           </p>
           <p className="content-en">
-            Volunteer, program, initiative, and partnership forms ask for your name and phone number, and may ask for an email, governorate, or initiative idea. We use this to reply and to follow the request inside the relevant team. We do not sell it, and we do not use it for commercial advertising.
+            Program, initiative, and partnership forms ask for your name and phone number, and may ask for an email or initiative idea. The unified volunteer form also asks for personal, education, and employment details, contact handles, and documents (ID, photo, CV). We use this to reply and to follow the request inside the relevant team. We do not sell it, and we do not use it for commercial advertising.
           </p>
           <p className="content-ar">
             يبقى الطلب ما دامت متابعته قائمة. لطلب الاطلاع أو التصحيح أو الحذف، اكتب إلى info@syrianyouth.com من البريد الذي استخدمته، أو اذكر رقم الهاتف الذي أرسلت به الطلب.

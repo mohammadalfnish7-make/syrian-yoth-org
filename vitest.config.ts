@@ -25,7 +25,11 @@ export default defineConfig({
         test: {
           name: "api",
           environment: "node",
-          include: ["tests/api/**/*.test.ts"],
+          include: [
+            "tests/api/**/*.test.ts",
+            "tests/lib/**/*.test.ts",
+            "tests/prisma/**/*.test.ts",
+          ],
           setupFiles: ["./tests/setup.api.ts"],
         },
       },

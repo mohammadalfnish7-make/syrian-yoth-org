@@ -6,6 +6,7 @@ import {
   formatRequestDate,
   requestStatusLabel,
 } from "@/lib/requests-excel";
+import { Prisma } from "@prisma/client";
 
 const TYPES = ["volunteer", "partner", "program", "initiative"] as const;
 type RequestType = (typeof TYPES)[number];
@@ -16,6 +17,11 @@ function isRequestType(value: string): value is RequestType {
 
 function cell(value: string | null | undefined) {
   return value?.trim() ? value : "";
+}
+
+function hobbiesCell(value: Prisma.JsonValue) {
+  if (!Array.isArray(value)) return "";
+  return value.filter((item): item is string => typeof item === "string").join(" | ");
 }
 
 export async function GET(request: NextRequest) {
@@ -49,13 +55,53 @@ export async function GET(request: NextRequest) {
     });
     sheetName = "طلبات التطوع";
     filename = "volunteer-requests.xls";
-    headers = ["الاسم", "الهاتف", "البريد", "المحافظة", "الرسالة", "الحالة", "التاريخ"];
+    headers = [
+      "الاسم",
+      "الجنس",
+      "المواليد",
+      "المحافظة",
+      "العنوان",
+      "الهاتف",
+      "التلغرام",
+      "LinkedIn",
+      "الحالة الوظيفية",
+      "مكان العمل والمنصب",
+      "المؤهل العلمي",
+      "مؤهل آخر",
+      "الجامعة",
+      "الكلية",
+      "السنة الدراسية",
+      "سنة أخرى",
+      "الهوايات",
+      "هواية أخرى",
+      "الهوية",
+      "الصورة الشخصية",
+      "السيرة الذاتية",
+      "الحالة",
+      "التاريخ",
+    ];
     rows = records.map((record) => [
       record.fullName,
-      record.phone,
-      cell(record.email),
+      record.gender,
+      formatRequestDate(record.dateOfBirth),
       record.governorate.nameAr,
-      cell(record.message),
+      record.address,
+      record.phone,
+      record.telegram,
+      record.hasLinkedIn ? "نعم" : "لا",
+      record.employmentStatus,
+      cell(record.workplacePosition),
+      record.educationLevel,
+      cell(record.educationLevelOther),
+      record.university,
+      record.college,
+      record.studyYear,
+      cell(record.studyYearOther),
+      hobbiesCell(record.hobbies),
+      cell(record.hobbiesOther),
+      record.idDocumentUrl,
+      record.personalPhotoUrl,
+      record.cvUrl,
       requestStatusLabel(record.status),
       formatRequestDate(record.submittedAt),
     ]);

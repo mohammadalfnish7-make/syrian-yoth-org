@@ -11,19 +11,34 @@ export type ImageUploadCategory =
   | "focus-areas"
   | "site"
   | "logos"
-  | "managers";
+  | "managers"
+  | "volunteers";
 
-export type UploadCategory = ImageUploadCategory | "videos";
+export type DocumentUploadCategory = "volunteer-docs";
+
+export type UploadCategory =
+  | ImageUploadCategory
+  | DocumentUploadCategory
+  | "videos";
 
 const ALLOWED_MIME_TYPES = ["image/jpeg", "image/png", "image/webp"];
 const ALLOWED_VIDEO_MIME_TYPES = ["video/mp4", "application/mp4"];
+const ALLOWED_DOCUMENT_MIME_TYPES = [
+  "application/pdf",
+  "application/msword",
+  "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+];
 const VIDEO_MAX_MB = 40;
+const DOCUMENT_MAX_MB = 10;
 
 const IMAGE_FILENAME_PATTERN =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\.webp$/i;
 
 const VIDEO_FILENAME_PATTERN =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\.mp4$/i;
+
+const DOCUMENT_FILENAME_PATTERN =
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\.(pdf|doc|docx)$/i;
 
 const CATEGORY_CONFIG: Record<
   ImageUploadCategory,
@@ -37,10 +52,12 @@ const CATEGORY_CONFIG: Record<
   site: { maxSizeMB: 5, maxWidth: 1920, quality: 82 },
   logos: { maxSizeMB: 2, maxWidth: 512, quality: 95 },
   managers: { maxSizeMB: 3, maxWidth: 800, quality: 88 },
+  volunteers: { maxSizeMB: 5, maxWidth: 1920, quality: 85 },
 };
 
 export const UPLOAD_CATEGORIES = [
   ...(Object.keys(CATEGORY_CONFIG) as ImageUploadCategory[]),
+  "volunteer-docs",
   "videos",
 ] as UploadCategory[];
 
@@ -51,17 +68,32 @@ export function isUploadCategory(value: string): value is UploadCategory {
 export function isImageUploadCategory(
   value: UploadCategory
 ): value is ImageUploadCategory {
-  return value !== "videos";
+  return value !== "videos" && value !== "volunteer-docs";
+}
+
+export function isDocumentUploadCategory(
+  value: UploadCategory
+): value is DocumentUploadCategory {
+  return value === "volunteer-docs";
 }
 
 function isAllowedUploadFilename(category: UploadCategory, filename: string) {
-  return category === "videos"
-    ? VIDEO_FILENAME_PATTERN.test(filename)
-    : IMAGE_FILENAME_PATTERN.test(filename);
+  if (category === "videos") return VIDEO_FILENAME_PATTERN.test(filename);
+  if (category === "volunteer-docs") {
+    return DOCUMENT_FILENAME_PATTERN.test(filename);
+  }
+  return IMAGE_FILENAME_PATTERN.test(filename);
 }
 
 export function contentTypeForUpload(filename: string): string {
-  return filename.toLowerCase().endsWith(".mp4") ? "video/mp4" : "image/webp";
+  const lower = filename.toLowerCase();
+  if (lower.endsWith(".mp4")) return "video/mp4";
+  if (lower.endsWith(".pdf")) return "application/pdf";
+  if (lower.endsWith(".doc")) return "application/msword";
+  if (lower.endsWith(".docx")) {
+    return "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+  }
+  return "image/webp";
 }
 
 function getUploadDir(): string {
@@ -109,6 +141,44 @@ export function resolveUploadPath(
 function isMp4Buffer(buffer: Buffer): boolean {
   if (buffer.length < 12) return false;
   return buffer.subarray(4, 8).toString("ascii") === "ftyp";
+}
+
+function documentExtension(file: File): "pdf" | "doc" | "docx" | null {
+  const name = file.name.toLowerCase();
+  if (name.endsWith(".pdf") || file.type === "application/pdf") return "pdf";
+  if (name.endsWith(".docx") || file.type.includes("wordprocessingml")) {
+    return "docx";
+  }
+  if (name.endsWith(".doc") || file.type === "application/msword") return "doc";
+  return null;
+}
+
+function isPdfBuffer(buffer: Buffer): boolean {
+  return buffer.length >= 5 && buffer.subarray(0, 5).toString("ascii") === "%PDF-";
+}
+
+function isZipBuffer(buffer: Buffer): boolean {
+  return (
+    buffer.length >= 4 &&
+    buffer[0] === 0x50 &&
+    buffer[1] === 0x4b &&
+    (buffer[2] === 0x03 || buffer[2] === 0x05 || buffer[2] === 0x07) &&
+    (buffer[3] === 0x04 || buffer[3] === 0x06 || buffer[3] === 0x08)
+  );
+}
+
+function isOleDocBuffer(buffer: Buffer): boolean {
+  return (
+    buffer.length >= 8 &&
+    buffer[0] === 0xd0 &&
+    buffer[1] === 0xcf &&
+    buffer[2] === 0x11 &&
+    buffer[3] === 0xe0 &&
+    buffer[4] === 0xa1 &&
+    buffer[5] === 0xb1 &&
+    buffer[6] === 0x1a &&
+    buffer[7] === 0xe1
+  );
 }
 
 export async function processAndSaveVideo(
@@ -182,6 +252,45 @@ export async function processAndSaveImage(
   };
 }
 
+export async function processAndSaveDocument(
+  file: File,
+  category: DocumentUploadCategory = "volunteer-docs"
+): Promise<{ url: string; filename: string }> {
+  const ext = documentExtension(file);
+  const mimeAllowed =
+    ALLOWED_DOCUMENT_MIME_TYPES.includes(file.type) ||
+    (file.type === "" && ext !== null);
+
+  if (!mimeAllowed || !ext) {
+    throw new Error("نوع الملف غير مدعوم. يُسمح بـ PDF و DOC و DOCX فقط.");
+  }
+
+  const maxBytes = DOCUMENT_MAX_MB * 1024 * 1024;
+  if (file.size > maxBytes) {
+    throw new Error(`حجم الملف يتجاوز الحد الأقصى (${DOCUMENT_MAX_MB} ميغابايت).`);
+  }
+
+  const buffer = Buffer.from(await file.arrayBuffer());
+  const contentOk =
+    (ext === "pdf" && isPdfBuffer(buffer)) ||
+    (ext === "docx" && isZipBuffer(buffer)) ||
+    (ext === "doc" && isOleDocBuffer(buffer));
+
+  if (!contentOk) {
+    throw new Error("محتوى الملف غير صالح.");
+  }
+
+  const filename = `${randomUUID()}.${ext}`;
+  const dir = getCategoryDir(category);
+  await mkdir(dir, { recursive: true });
+  await writeFile(path.join(dir, filename), buffer);
+
+  return {
+    url: getPublicUrl(category, filename),
+    filename,
+  };
+}
+
 export async function deleteImage(
   category: UploadCategory,
   filename: string
@@ -219,7 +328,6 @@ export function extractCategoryFromUrl(url: string): UploadCategory | null {
   if (url.includes("/images/managers/")) return "managers";
   const match = url.match(/\/api\/uploads\/([^/]+)\//);
   if (!match) return null;
-  const category = match[1] as UploadCategory;
-  if (category === "videos" || category in CATEGORY_CONFIG) return category;
-  return null;
+  const category = match[1];
+  return isUploadCategory(category) ? category : null;
 }

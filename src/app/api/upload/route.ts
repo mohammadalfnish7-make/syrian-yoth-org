@@ -6,11 +6,13 @@ import {
   readJsonBodyLimit,
 } from "@/lib/api-utils";
 import {
+  processAndSaveDocument,
   processAndSaveImage,
   processAndSaveVideo,
   deleteImage,
   extractFilenameFromUrl,
   extractCategoryFromUrl,
+  isDocumentUploadCategory,
   isImageUploadCategory,
   isUploadCategory,
   type UploadCategory,
@@ -43,6 +45,14 @@ export async function POST(request: NextRequest) {
 
     if (!canUploadCategory(auth.session.role, category)) {
       return apiError("ليس لديك صلاحية لهذا الإجراء.", 403);
+    }
+
+    if (isDocumentUploadCategory(category)) {
+      const result = await processAndSaveDocument(file, category);
+      return apiSuccess({
+        url: result.url,
+        filename: result.filename,
+      });
     }
 
     if (!isImageUploadCategory(category)) {

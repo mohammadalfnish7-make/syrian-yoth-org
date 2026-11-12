@@ -77,8 +77,8 @@ export const INVOLVE_CARDS: InvolveCard[] = [
       en: "Commitment, teamwork, and a wish to serve locally.",
     },
     nextStep: {
-      ar: "يراجع فريق المحافظة الطلب ويتواصل معك على الهاتف أو البريد. لن يُغلق الطلب بصمت.",
-      en: "The governorate team reviews the request and contacts you by phone or email. It will not be closed in silence.",
+      ar: "يراجع فريق المحافظة الطلب ويتواصل معك عبر واتساب أو التلغرام. لن يُغلق الطلب بصمت.",
+      en: "The governorate team reviews the request and contacts you on WhatsApp or Telegram. It will not be closed in silence.",
     },
   },
   {

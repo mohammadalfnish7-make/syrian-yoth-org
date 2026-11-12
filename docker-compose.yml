@@ -24,7 +24,8 @@ services:
       SEED_ADMIN_USERNAME: ${SEED_ADMIN_USERNAME:-admin}
       SEED_ADMIN_PASSWORD: ${SEED_ADMIN_PASSWORD:?SEED_ADMIN_PASSWORD must be set}
       NODE_ENV: production
-    command: sh -c "npx prisma db push --accept-data-loss && npm run db:seed"
+    # Schema sync only — never accept data loss. Seed is create-only and will not overwrite edits.
+    command: sh -c "npx prisma db push && npm run db:seed"
     depends_on:
       db:
         condition: service_healthy

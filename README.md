@@ -22,7 +22,7 @@ docker compose up db -d
 # 3. Install dependencies
 npm install
 
-# 4. Push schema & seed data
+# 4. Push schema & seed essentials only (governorates + admin; no default content)
 npm run db:push
 npm run db:seed
 

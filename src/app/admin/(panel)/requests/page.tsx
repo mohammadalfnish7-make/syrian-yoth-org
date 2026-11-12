@@ -7,9 +7,15 @@ import { Download, Loader2 } from "lucide-react";
 type VolunteerReq = {
   id: string;
   fullName: string;
+  gender: string;
   phone: string;
-  email: string | null;
-  message: string | null;
+  telegram: string;
+  employmentStatus: string;
+  university: string;
+  college: string;
+  idDocumentUrl: string;
+  personalPhotoUrl: string;
+  cvUrl: string;
   status: string;
   submittedAt: string;
   governorate: { nameAr: string };
@@ -196,8 +202,10 @@ export default function RequestsPage() {
             <thead>
               <tr>
                 <th>الاسم</th>
-                <th>الهاتف</th>
+                <th>الهاتف / تلغرام</th>
                 <th>المحافظة</th>
+                <th>الوضع / الدراسة</th>
+                <th>الوثائق</th>
                 <th>الحالة</th>
                 <th>التاريخ</th>
                 <th>تحديث</th>
@@ -206,16 +214,45 @@ export default function RequestsPage() {
             <tbody>
               {volunteer.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="admin-table__empty">
+                  <td colSpan={8} className="admin-table__empty">
                     لا توجد طلبات تطوع
                   </td>
                 </tr>
               ) : (
                 volunteer.map((r) => (
                   <tr key={r.id}>
-                    <td>{r.fullName}</td>
-                    <td dir="ltr">{r.phone}</td>
+                    <td>
+                      <div>{r.fullName}</div>
+                      <div style={{ fontSize: "0.8rem", color: "#6b7280" }}>
+                        {r.gender}
+                      </div>
+                    </td>
+                    <td>
+                      <div dir="ltr">{r.phone}</div>
+                      <div dir="ltr" style={{ fontSize: "0.8rem", color: "#6b7280" }}>
+                        {r.telegram}
+                      </div>
+                    </td>
                     <td>{r.governorate.nameAr}</td>
+                    <td>
+                      <div>{r.employmentStatus}</div>
+                      <div style={{ fontSize: "0.8rem", color: "#6b7280" }}>
+                        {r.university} — {r.college}
+                      </div>
+                    </td>
+                    <td>
+                      <div className="admin-table__links">
+                        <a href={r.idDocumentUrl} target="_blank" rel="noreferrer">
+                          الهوية
+                        </a>
+                        <a href={r.personalPhotoUrl} target="_blank" rel="noreferrer">
+                          الصورة
+                        </a>
+                        <a href={r.cvUrl} target="_blank" rel="noreferrer">
+                          السيرة
+                        </a>
+                      </div>
+                    </td>
                     <td>
                       <span className="admin-badge admin-badge--draft">
                         {STATUS_LABELS[r.status] || r.status}

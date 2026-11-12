@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Loader2, X } from "lucide-react";
 import { INVOLVE_CARDS, type InvolveCardIconKey } from "@/lib/site-content";
 import { LocaleLink } from "@/components/LocaleLink";
+import { VolunteerRequestForm } from "@/components/VolunteerRequestForm";
 
 type Governorate = { id: string; nameAr: string };
 
@@ -28,6 +29,19 @@ export function RequestModal({
 
   if (!isOpen || !type) return null;
 
+  async function submitJson(data: Record<string, FormDataEntryValue>) {
+    const res = await fetch(`/api/public/requests/${type}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
+
+    if (!res.ok) {
+      const result = await res.json();
+      throw new Error(result.error || "Failed to submit request.");
+    }
+  }
+
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setSubmitting(true);
@@ -38,10 +52,24 @@ export function RequestModal({
     const data = Object.fromEntries(formData.entries());
 
     try {
-      const res = await fetch(`/api/public/requests/${type}`, {
+      await submitJson(data);
+      setSuccess(true);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Something went wrong.");
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
+  async function handleVolunteerSubmit(formData: FormData) {
+    setSubmitting(true);
+    setError("");
+    setSuccess(false);
+
+    try {
+      const res = await fetch("/api/public/requests/volunteer", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
+        body: formData,
       });
 
       if (!res.ok) {
@@ -76,10 +104,15 @@ export function RequestModal({
           : "Submit an Initiative";
 
   const nextStep = INVOLVE_CARDS.find((card) => card.icon === type);
+  const isVolunteer = type === "volunteer";
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-      <div className="bg-white rounded-lg shadow-xl w-full max-w-md relative overflow-hidden flex flex-col max-h-[90vh]">
+      <div
+        className={`bg-white rounded-lg shadow-xl w-full relative overflow-hidden flex flex-col max-h-[90vh] ${
+          isVolunteer ? "max-w-2xl" : "max-w-md"
+        }`}
+      >
         <div className="flex items-center justify-between p-4 border-b border-gray-100">
           <div>
             <h2 className="text-xl font-bold text-gray-900 content-ar">{titleAr}</h2>
@@ -113,6 +146,13 @@ export function RequestModal({
                 <span className="content-en">Done</span>
               </button>
             </div>
+          ) : isVolunteer ? (
+            <VolunteerRequestForm
+              governorates={governorates}
+              onSubmit={handleVolunteerSubmit}
+              submitting={submitting}
+              error={error}
+            />
           ) : (
             <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
               {error && (
@@ -155,19 +195,6 @@ export function RequestModal({
                 </div>
               </div>
 
-              {type === "volunteer" && (
-                <div>
-                  <label style={{ display: "block", fontSize: "0.875rem", marginBottom: "0.25rem", color: "#374151" }} className="content-ar">المحافظة *</label>
-                  <label style={{ display: "block", fontSize: "0.875rem", marginBottom: "0.25rem", color: "#374151" }} className="content-en">Governorate *</label>
-                  <select required name="governorateId" style={{ width: "100%", padding: "0.5rem 0.75rem", border: "1px solid #d1d5db", borderRadius: "0.375rem", boxSizing: "border-box", backgroundColor: "white", color: "#000" }}>
-                    <option value="">--</option>
-                    {governorates.map((g) => (
-                      <option key={g.id} value={g.id}>{g.nameAr}</option>
-                    ))}
-                  </select>
-                </div>
-              )}
-
               {type === "program" && (
                 <div>
                   <label style={{ display: "block", fontSize: "0.875rem", marginBottom: "0.25rem", color: "#374151" }} className="content-ar">البرنامج المفضل *</label>
@@ -192,11 +219,11 @@ export function RequestModal({
 
               <p className="request-form__privacy">
                 <span className="content-ar">
-                  نستخدم الاسم والهاتف والبريد والمحافظة للرد على هذا الطلب فقط.{" "}
+                  نستخدم الاسم والهاتف والبريد للرد على هذا الطلب فقط.{" "}
                   <LocaleLink href="/privacy">سياسة الخصوصية</LocaleLink>
                 </span>
                 <span className="content-en">
-                  We use your name, phone, email, and governorate only to reply to this request.{" "}
+                  We use your name, phone, and email only to reply to this request.{" "}
                   <LocaleLink href="/privacy">Privacy policy</LocaleLink>
                 </span>
               </p>
